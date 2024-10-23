@@ -1,0 +1,11 @@
+@CourseScheduling_HostAddress = http://localhost:5084
+
+GET {{CourseScheduling_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{CourseScheduling_HostAddress}}/todos/1
+Accept: application/json
+
+###
