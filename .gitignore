@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Course-Scheduling/FileContentIndex
+/.vs/Course-Scheduling/v17
+/CourseScheduling/CourseScheduling/bin/Debug/net8.0
+/CourseScheduling/.vs/CourseScheduling
+/CourseScheduling/.vs/ProjectEvaluation
+/CourseScheduling/CourseScheduling/obj
