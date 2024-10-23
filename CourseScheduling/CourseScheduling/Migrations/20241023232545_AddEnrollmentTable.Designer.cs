@@ -4,6 +4,7 @@ using CourseScheduling.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023232545_AddEnrollmentTable")]
+    partial class AddEnrollmentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace CourseScheduling.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollment");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Student", b =>

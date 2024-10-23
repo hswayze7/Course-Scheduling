@@ -8,5 +8,8 @@
         public string Password { get; set; }  // We'll store hashed passwords later
         public string Major { get; set; }
         public string Year { get; set; }
+
+
+        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

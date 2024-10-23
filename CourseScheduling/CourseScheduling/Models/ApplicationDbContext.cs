@@ -13,6 +13,8 @@
         public DbSet<Course> Courses { get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
 
+        public DbSet<Enrollment> Enrollments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,6 +35,9 @@
                    Year = "Sophomore"
                }
            );
+
+            modelBuilder.Entity<Enrollment>()
+           .HasKey(e => e.EnrollmentId);
         }
       
 
