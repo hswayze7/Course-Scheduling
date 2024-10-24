@@ -32,7 +32,7 @@ namespace CourseScheduling.Controllers
 
                 if (student != null)
                 {
-                    // Set authentication (this is a simple approach, consider using Identity or cookies for real apps)
+                    // Set authentication
                     HttpContext.Session.SetInt32("StudentId", student.StudentId);
                     return RedirectToAction("Index", "Course");  // Redirect to the course page
                 }
@@ -45,7 +45,7 @@ namespace CourseScheduling.Controllers
             return View(model);
         }
 
-        // Logout (optional)
+        // Logout 
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();  // Clear the session

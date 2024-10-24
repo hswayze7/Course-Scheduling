@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+
+
 <div class="container mt-4">
     <h2 class="text-primary">Available Courses</h2>
 
@@ -15,6 +18,7 @@
 
     <!-- Table for selecting courses to enroll in -->
     <h3>Select Courses to Enroll</h3>
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
     <table class="table table-bordered table-hover table-striped mb-5">
         <thead class="thead-dark">
             <tr>
@@ -34,15 +38,18 @@
                     <td>@course.Credits</td>
                     <td>@course.Time</td>
                     <td>
-                        <form method="post" asp-action="Enroll" asp-route-courseId="@course.CourseId">
-                            <button type="submit" class="btn btn-primary">Enroll</button>
-                        </form>
+                            <form method="post" asp-action="Enroll" asp-route-courseId="@course.CourseId">
+                                <button type="submit" class="btn btn-primary">Enroll</button>
+                            </form>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 
+       
+    </div>
+    
     <!-- Enrolled courses section -->
     <h3 class="text-secondary">Your Enrolled Courses</h3>
     @if (ViewBag.Enrollments != null && ((List<CourseScheduling.Models.Enrollment>)ViewBag.Enrollments).Count > 0)
@@ -75,4 +82,5 @@
     {
         <p class="text-warning">You are not enrolled in any courses yet.</p>
     }
+    
 </div>

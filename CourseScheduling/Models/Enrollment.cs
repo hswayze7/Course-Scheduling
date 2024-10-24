@@ -10,6 +10,6 @@
         public int CourseId { get; set; }  // Foreign key to the Course
         public Course Course { get; set; }  // Navigation property
 
-        public DateTime EnrollmentDate { get; set; }  // Optional field to store when the student enrolled
+        public DateTime EnrollmentDate { get; set; }  
     }
 }
