@@ -8,6 +8,9 @@
         public int Credits { get; set; }
         public string Time { get; set; }
 
+        
+       
+
 
         public ICollection<Enrollment> Enrollments { get; set; }
     }

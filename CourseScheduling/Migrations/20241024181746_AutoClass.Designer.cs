@@ -4,6 +4,7 @@ using CourseScheduling.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024181746_AutoClass")]
+    partial class AutoClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,94 +68,6 @@ namespace CourseScheduling.Migrations
                             CourseName = "Calculus II",
                             Credits = 4,
                             Time = "Tue 1:00 PM - 3:00 PM"
-                        },
-                        new
-                        {
-                            CourseId = 3,
-                            CourseCode = "CS400",
-                            CourseName = "Data Structures",
-                            Credits = 4,
-                            Time = "T/TR 2:15 PM - 3:30 PM"
-                        },
-                        new
-                        {
-                            CourseId = 4,
-                            CourseCode = "CS510",
-                            CourseName = "Programming Language Concepts",
-                            Credits = 3,
-                            Time = "T/TR 8:30 AM - 9:50 AM"
-                        },
-                        new
-                        {
-                            CourseId = 5,
-                            CourseCode = "MATH231",
-                            CourseName = "Discrete Math",
-                            Credits = 3,
-                            Time = "MWF 1:00 PM - 3:00 PM"
-                        },
-                        new
-                        {
-                            CourseId = 6,
-                            CourseCode = "PSY325",
-                            CourseName = "Developmental Psychology",
-                            Credits = 3,
-                            Time = "MTF 12:30 PM - 1:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 7,
-                            CourseCode = "SOC338",
-                            CourseName = "Health & Lifestyle",
-                            Credits = 3,
-                            Time = "MWF 2:15 PM - 3:30 PM"
-                        },
-                        new
-                        {
-                            CourseId = 8,
-                            CourseCode = "MKT690J",
-                            CourseName = "Social Media Marketing",
-                            Credits = 3,
-                            Time = "T/TR 9:30 AM - 10:45 AM"
-                        },
-                        new
-                        {
-                            CourseId = 9,
-                            CourseCode = "MGMT681",
-                            CourseName = "Strategic Management",
-                            Credits = 3,
-                            Time = "MFW 3:30 PM - 4:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 10,
-                            CourseCode = "NURS362",
-                            CourseName = "Clinical Care Lab",
-                            Credits = 1,
-                            Time = "F 1:00 PM - 4:00 PM"
-                        },
-                        new
-                        {
-                            CourseId = 11,
-                            CourseCode = "GEOG235",
-                            CourseName = "Meteorology",
-                            Credits = 3,
-                            Time = "MWF 2:15 PM - 3:30 PM"
-                        },
-                        new
-                        {
-                            CourseId = 12,
-                            CourseCode = "ENGR101",
-                            CourseName = "Introduction to Engineering",
-                            Credits = 3,
-                            Time = "T/TR 11:15 AM - 12:25 PM"
-                        },
-                        new
-                        {
-                            CourseId = 13,
-                            CourseCode = "CHEM221",
-                            CourseName = "General Chemistry I",
-                            Credits = 5,
-                            Time = "T/TR 4:30 PM - 6:00 PM"
                         });
                 });
 
@@ -186,7 +101,7 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2024, 10, 24, 13, 36, 6, 854, DateTimeKind.Local).AddTicks(8468),
+                            EnrollmentDate = new DateTime(2024, 10, 24, 13, 17, 45, 830, DateTimeKind.Local).AddTicks(5644),
                             StudentId = 1
                         });
                 });

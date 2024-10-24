@@ -35,8 +35,7 @@
                     <td>@course.Time</td>
                     <td>
                         <form method="post" asp-action="Enroll" asp-route-courseId="@course.CourseId">
-                            <input type="hidden" name="studentId" value="1" /> <!-- For now, static student ID -->
-                            <button type="submit" class="btn btn-success">Enroll</button>
+                            <button type="submit" class="btn btn-primary">Enroll</button>
                         </form>
                     </td>
                 </tr>
