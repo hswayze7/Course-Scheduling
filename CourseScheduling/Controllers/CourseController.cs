@@ -1,6 +1,7 @@
 ﻿using CourseScheduling.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,99 +17,107 @@ namespace CourseScheduling.Controllers
         }
 
         // Show the list of available courses
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            // Retrieve the StudentId from the session
             var studentId = HttpContext.Session.GetInt32("StudentId");
 
             if (studentId == null)
             {
-                // If not logged in, redirect to the login page
                 return RedirectToAction("Login", "Account");
-                Console.WriteLine($"STUDENT THAT IS LOGGED IN: {studentId}");
             }
-            Console.WriteLine($"INDEX STUDENT THAT IS LOGGED IN: {studentId}");
-            // Fetch the student and include enrollments
-            var student = _context.Students
+
+            var availableCourses = await _context.Courses.ToListAsync();
+
+            // Fetch the student's enrolled courses
+            var student = await _context.Students
                 .Include(s => s.Enrollments)
-                .ThenInclude(e => e.Course)  // Ensure the Course details are included in enrollments
-                .FirstOrDefault(s => s.StudentId == studentId);
+                .ThenInclude(e => e.Course)
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
 
-            // If student exists, pass the student's name and enrolled courses to the view
-            if (student != null)
+            
+            var enrolledCourses = student?.Enrollments.ToList() ?? new List<Enrollment>();
+
+            var viewModel = new CourseEnrollmentViewModel
             {
-                ViewBag.StudentName = student.Name;  // Student's name for display
-                ViewBag.Enrollments = student.Enrollments.ToList();  // Pass enrollments to ViewBag
+                AvailableCourses = availableCourses,
+                EnrolledCourses = enrolledCourses
+            };
 
-                foreach (var enrollment in ViewBag.Enrollments)
-                {
-                    Console.WriteLine($"Enrolled in: {enrollment.Course.CourseName}");
-                }
-            }
-
-            // Fetch all available courses
-            var courses = _context.Courses.ToList();
-
-            // Return the view with available courses
-            return View(courses);
+            return View(viewModel); // Pass the view model to the view
         }
 
-        // Enroll in a course
-        [HttpPost]
-        public async Task<IActionResult> Enroll(int courseId)
-        {
-            Console.WriteLine("Enroll method triggered PRESSED");
 
-            Console.WriteLine("Enroll method triggered");
-            // Get the logged-in student's ID from Session
+        // Enroll in a course
+
+        [HttpPost]
+        public async Task<IActionResult> Enroll([FromBody] EnrollViewModel model)
+        {
+            Console.WriteLine($"Received CourseId: {model.CourseId}");
+
+            if (model.CourseId <= 0)
+            {
+                Console.WriteLine("Invalid CourseId.");
+                return BadRequest("Invalid courseId.");
+            }
+
             var studentId = HttpContext.Session.GetInt32("StudentId");
-            Console.WriteLine($"Student ID: {studentId}, Course ID: {courseId}");
             if (studentId == null)
             {
-                Console.WriteLine("StudentId is null. Redirecting to login.");
-                return RedirectToAction("Login", "Account");
+                return Unauthorized("Student not logged in.");
             }
-            Console.WriteLine($"ENROLL STUDENT THAT IS LOGGED IN: {studentId}");
-            Console.WriteLine($"Attempting to enroll StudentId: {studentId} in CourseId: {courseId}");
 
-            // Check if the student is already enrolled in the course
-            var existingEnrollment = _context.Enrollments
-                .FirstOrDefault(e => e.CourseId == courseId && e.StudentId == studentId);
+            var course = await _context.Courses.FindAsync(model.CourseId);
+            if (course == null)
+            {
+                return BadRequest("Course not found.");
+            }
+
+            // Check if the student is already enrolled in this course
+            var existingEnrollment = await _context.Enrollments
+                .FirstOrDefaultAsync(e => e.CourseId == model.CourseId && e.StudentId == studentId);
 
             if (existingEnrollment == null)
             {
+                // Add the enrollment to the database
                 var enrollment = new Enrollment
                 {
-                    CourseId = courseId,
-                    StudentId = (int)studentId,
+                    CourseId = model.CourseId,
+                    StudentId = studentId.Value,  // Ensure studentId is not null
                     EnrollmentDate = DateTime.Now
                 };
 
                 _context.Enrollments.Add(enrollment);
-                try
-                {
-
-
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine("Enrollment successful.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error saving enrollment: {ex.Message}");
-                }
+                await _context.SaveChangesAsync();  // Save the new enrollment to the database
+                Console.WriteLine("Enrollment successful.");
             }
             else
             {
-                Console.WriteLine("Student already enrolled in this course.");
+                Console.WriteLine("Student is already enrolled in this course.");
             }
 
-            var student = _context.Students
-           .Include(s => s.Enrollments)
-           .ThenInclude(e => e.Course)
-           .FirstOrDefault(s => s.StudentId == studentId);
-
-            // Redirect back to the course index page after enrolling
-            return RedirectToAction(nameof(Index));
+            return Ok("Enrollment successful.");
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetEnrolledCourses()
+        {
+            var studentId = HttpContext.Session.GetInt32("StudentId");
+            if (studentId == null)
+            {
+                return Unauthorized("Student not logged in.");
+            }
+
+            // Get the student's enrolled courses
+            var enrollments = await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .Include(e => e.Course) // Include the course details
+                .ToListAsync();
+
+            // Return the partial view with updated enrollments
+            return PartialView("_EnrolledCourses", enrollments);
+        }
+
+
     }
 }

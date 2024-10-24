@@ -1,11 +1,10 @@
-﻿@model IEnumerable<CourseScheduling.Models.Course>
+﻿@model CourseScheduling.Models.CourseEnrollmentViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
+@Html.AntiForgeryToken()
 
 <div class="container mt-4">
     <h2 class="text-primary">Available Courses</h2>
@@ -19,68 +18,79 @@
     <!-- Table for selecting courses to enroll in -->
     <h3>Select Courses to Enroll</h3>
     <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-    <table class="table table-bordered table-hover table-striped mb-5">
-        <thead class="thead-dark">
-            <tr>
-                <th>Course Code</th>
-                <th>Course Name</th>
-                <th>Credits</th>
-                <th>Time</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var course in Model)
-            {
-                <tr>
-                    <td>@course.CourseCode</td>
-                    <td>@course.CourseName</td>
-                    <td>@course.Credits</td>
-                    <td>@course.Time</td>
-                    <td>
-                            <form method="post" asp-action="Enroll" asp-route-courseId="@course.CourseId">
-                                <button type="submit" class="btn btn-primary">Enroll</button>
-                            </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-       
-    </div>
-    
-    <!-- Enrolled courses section -->
-    <h3 class="text-secondary">Your Enrolled Courses</h3>
-    @if (ViewBag.Enrollments != null && ((List<CourseScheduling.Models.Enrollment>)ViewBag.Enrollments).Count > 0)
-    {
-        <table class="table table-bordered table-hover table-striped mt-3">
-            <thead class="thead-light">
+        <table class="table table-bordered table-hover table-striped mb-5">
+            <thead class="thead-dark">
                 <tr>
                     <th>Course Code</th>
                     <th>Course Name</th>
                     <th>Credits</th>
                     <th>Time</th>
-                    <th>Enrollment Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var enrollment in ViewBag.Enrollments)
+                @foreach (var course in Model.AvailableCourses) 
                 {
                     <tr>
-                        <td>@enrollment.Course.CourseCode</td>
-                        <td>@enrollment.Course.CourseName</td>
-                        <td>@enrollment.Course.Credits</td>
-                        <td>@enrollment.Course.Time</td>
-                        <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                        <td>@course.CourseCode</td>
+                        <td>@course.CourseName</td>
+                        <td>@course.Credits</td>
+                        <td>@course.Time</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="console.log('Enroll button clicked'); enroll(@course.CourseId)">Enroll</button>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <p class="text-warning">You are not enrolled in any courses yet.</p>
-    }
-    
+    </div>
+    <!-- Enrolled courses section -->
+    <h3 class="text-secondary">Your Enrolled Courses</h3>
+    <div id="enrolledCourses">
+        @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+    </div>
+   
 </div>
+
+
+
+<script>
+    async function enroll(courseId) {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        console.log("CourseId being passed:", courseId);
+
+        try {
+            // First, enroll the student
+            const response = await fetch('/Course/Enroll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ courseId: courseId })  // Pass the courseId
+            });
+
+            if (response.ok) {
+                console.log("Enrollment successful.");
+
+                // Fetch the updated enrolled courses after successful enrollment
+                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCourses', {
+                    method: 'GET'
+                });
+
+                if (enrolledCoursesResponse.ok) {
+                    const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
+                    document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
+                } else {
+                    console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
+                }
+            } else {
+                console.error("Failed to enroll. Response code: " + response.status);
+            }
+        } catch (error) {
+            console.error("Error during enrollment:", error);
+        }
+    }
+
+</script>

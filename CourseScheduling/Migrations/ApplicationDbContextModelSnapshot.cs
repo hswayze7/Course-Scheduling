@@ -186,7 +186,7 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2024, 10, 24, 13, 36, 6, 854, DateTimeKind.Local).AddTicks(8468),
+                            EnrollmentDate = new DateTime(2024, 10, 24, 16, 46, 21, 728, DateTimeKind.Local).AddTicks(227),
                             StudentId = 1
                         });
                 });

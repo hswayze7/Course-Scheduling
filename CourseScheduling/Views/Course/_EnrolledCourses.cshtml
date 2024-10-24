@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CourseScheduling.Models.Enrollment>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-hover table-striped mt-3">
+        <thead class="thead-light">
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Time</th>
+                <th>Enrollment Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrollment in Model)
+            {
+                <tr>
+                    <td>@enrollment.Course.CourseCode</td>
+                    <td>@enrollment.Course.CourseName</td>
+                    <td>@enrollment.Course.Credits</td>
+                    <td>@enrollment.Course.Time</td>
+                    <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You are not enrolled in any courses yet.</p>
+}

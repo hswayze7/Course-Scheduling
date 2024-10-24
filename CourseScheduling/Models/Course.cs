@@ -1,7 +1,10 @@
-﻿namespace CourseScheduling.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CourseScheduling.Models
 {
     public class Course
     {
+        [Key]
         public int CourseId { get; set; }
         public string CourseCode { get; set; }
         public string CourseName { get; set; }
