@@ -25,13 +25,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Order of middleware is important
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// Enable session (place before Authorization)
+// Enable session 
 app.UseSession();
 
 app.UseAuthorization();

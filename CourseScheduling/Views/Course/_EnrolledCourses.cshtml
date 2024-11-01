@@ -11,6 +11,7 @@
                 <th>Time</th>
                 <th>Professor</th>
                 <th>Enrollment Date</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
                     <td>@enrollment.Course.Time</td>
                     <td>@enrollment.Course.Professor</td>
                     <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="deleteEnrollment(@enrollment.EnrollmentId)">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>

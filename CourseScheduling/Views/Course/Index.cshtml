@@ -96,3 +96,41 @@
     }
 
 </script>
+
+<script>
+    async function deleteEnrollment(enrollmentId) {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        try {
+            const response = await fetch('/Course/DeleteEnrollment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(enrollmentId)  // Send the enrollmentId in the body
+            });
+
+            if (response.ok) {
+                console.log("Enrollment deleted successfully.");
+
+                // Fetch the updated enrolled courses after successful deletion
+                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCourses', {
+                    method: 'GET'
+                });
+
+                if (enrolledCoursesResponse.ok) {
+                    const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
+                    document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
+                } else {
+                    console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
+                }
+            } else {
+                console.error("Failed to delete enrollment. Response code: " + response.status);
+            }
+        } catch (error) {
+            console.error("Error during deletion:", error);
+        }
+    }
+
+</script>

@@ -48,7 +48,6 @@ namespace CourseScheduling.Controllers
 
 
         // Enroll in a course
-
         [HttpPost]
         public async Task<IActionResult> Enroll([FromBody] EnrollViewModel model)
         {
@@ -98,7 +97,33 @@ namespace CourseScheduling.Controllers
             return Ok("Enrollment successful.");
         }
 
+        //Gives the student an option to delete a course after selecting to enroll in said course
+        [HttpPost]
+        public async Task<IActionResult> DeleteEnrollment([FromBody] int enrollmentId)
+        {
+            var studentId = HttpContext.Session.GetInt32("StudentId");
+            if (studentId == null)
+            {
+                return Unauthorized("Student not logged in.");
+            }
 
+            var enrollment = await _context.Enrollments
+                .FirstOrDefaultAsync(e => e.EnrollmentId == enrollmentId && e.StudentId == studentId);
+
+            if (enrollment == null)
+            {
+                return BadRequest("Enrollment not found or not authorized to delete.");
+            }
+
+            _context.Enrollments.Remove(enrollment);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Enrollment deleted successfully.");
+            return Ok("Enrollment deleted successfully.");
+        }
+
+
+        //Function to grab what classes the student is enrolled in
         [HttpGet]
         public async Task<IActionResult> GetEnrolledCourses()
         {

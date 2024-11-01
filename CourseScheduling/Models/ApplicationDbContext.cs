@@ -41,7 +41,7 @@
                    StudentId = 1,  // Set a unique ID for the student
                    Name = "Test Student",
                    Email = "test@student.com",
-                   Password = "test123",  // You can also hash this password
+                   Password = "test123",  
                    Major = "Computer Science",
                    Year = "Sophomore"
                }
