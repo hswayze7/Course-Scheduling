@@ -25,6 +25,7 @@
                     <th>Course Name</th>
                     <th>Credits</th>
                     <th>Time</th>
+                    <th>Professor</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@
                         <td>@course.CourseName</td>
                         <td>@course.Credits</td>
                         <td>@course.Time</td>
+                        <td>@course.Professor</td>
                         <td>
                             <button type="button" class="btn btn-primary" onclick="console.log('Enroll button clicked'); enroll(@course.CourseId)">Enroll</button>
                         </td>

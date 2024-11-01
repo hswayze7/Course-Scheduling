@@ -9,6 +9,7 @@
                 <th>Course Name</th>
                 <th>Credits</th>
                 <th>Time</th>
+                <th>Professor</th>
                 <th>Enrollment Date</th>
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                     <td>@enrollment.Course.CourseName</td>
                     <td>@enrollment.Course.Credits</td>
                     <td>@enrollment.Course.Time</td>
+                    <td>@enrollment.Course.Professor</td>
                     <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
                 </tr>
             }

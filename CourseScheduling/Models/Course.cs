@@ -11,6 +11,8 @@ namespace CourseScheduling.Models
         public int Credits { get; set; }
         public string Time { get; set; }
 
+        public string Professor { get; set; }
+
         
        
 
