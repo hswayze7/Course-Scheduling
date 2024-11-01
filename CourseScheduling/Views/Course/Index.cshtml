@@ -47,9 +47,17 @@
         </table>
     </div>
     <!-- Enrolled courses section -->
-    <h3 class="text-secondary">Your Enrolled Courses</h3>
-    <div id="enrolledCourses">
-        @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+    <div class="container mt-4">
+        <h2 class="text-primary">Your Enrolled Courses</h2>
+
+        <!-- Enrolled courses table -->
+        <div id="enrolledCourses">
+            @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+        </div>
+
+        <!-- Calendar object -->
+        <h3 class="text-secondary mt-4">Class Schedule</h3>
+        <div id="calendar"></div>
     </div>
    
 </div>
@@ -77,20 +85,27 @@
                 console.log("Enrollment successful.");
 
                 // Fetch the updated enrolled courses after successful enrollment
-                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCourses', {
+                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable', {
                     method: 'GET'
                 });
 
                 if (enrolledCoursesResponse.ok) {
                     const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
                     document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
-                } else {
+                    updateCalendar(); //Should update the calendar
+                } 
+                else 
+                {
                     console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
                 }
-            } else {
+            }   
+            else 
+                {
                 console.error("Failed to enroll. Response code: " + response.status);
-            }
-        } catch (error) {
+                }
+        } 
+        catch (error) 
+        {
             console.error("Error during enrollment:", error);
         }
     }
@@ -115,22 +130,66 @@
                 console.log("Enrollment deleted successfully.");
 
                 // Fetch the updated enrolled courses after successful deletion
-                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCourses', {
+                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable', {
                     method: 'GET'
                 });
 
                 if (enrolledCoursesResponse.ok) {
                     const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
                     document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
-                } else {
+                    updateCalendar(); //Should update the calendar when course is deleted
+                } 
+                else 
+                {
                     console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
                 }
-            } else {
+            } 
+            else 
+            {
                 console.error("Failed to delete enrollment. Response code: " + response.status);
             }
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.error("Error during deletion:", error);
         }
     }
 
 </script>
+
+<!--Addition of calendar to page that shows how a student's day / schedule will look-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            events: async function (fetchInfo, successCallback, failureCallback) {
+                try {
+                    // Fetch the events from your server
+                    let response = await fetch('/Course/GetEnrolledCourses');
+                    if (response.ok) {
+                        let events = await response.json();
+                        successCallback(events); // Load events into the calendar
+                    } else {
+                        console.error("Failed to fetch events.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching events:", error);
+                }
+            },
+            eventColor: '#378006' // Set color
+        });
+
+        calendar.render();
+
+        window.updateCalendar = function () {
+            calendar.refetchEvents(); // Refresh events from the server
+        };
+    });
+</script>
+
