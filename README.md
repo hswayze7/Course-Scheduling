@@ -4,10 +4,20 @@
 <h1 align="center">Course Scheduling</h1>
 <p align="center">This is a project for Senior Design 1</p>
 
+Members for the Flash Rider Group for this project:
+- Hannah Swayze
+- Md Mehedi Hasan Chowdhury
+
+
+<h3 align="center">Features included:</h3>
+- Feature 1: User login system
+- Feature 2: Course Enrollment
+- Feature 3: Schedule Management
 
 
 
-Current screenshots of UI:
+
+<h2 align="center">Current screenshots of UI:</h2>
 
 Login Page:
 
