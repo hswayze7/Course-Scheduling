@@ -14,9 +14,12 @@ Members for the Flash Rider Group for this project:
 - Feature 1: User login system
 
 - Feature 2: Course Enrollment
+- Ability to search for classes.
 
 
 - Feature 3: Schedule Management
+
+
 
 
 
