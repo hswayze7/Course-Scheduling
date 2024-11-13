@@ -11,7 +11,10 @@ Members for the Flash Rider Group for this project:
 
 <h3 align="center">Features included:</h3>
 - Feature 1: User login system
+
 - Feature 2: Course Enrollment
+
+
 - Feature 3: Schedule Management
 
 
