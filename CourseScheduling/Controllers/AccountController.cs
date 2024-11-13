@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace CourseScheduling.Controllers
 {
+    //Controller to handle that user login.
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;

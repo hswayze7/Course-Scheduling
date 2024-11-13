@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CourseScheduling.Controllers
 {
+    //Controller to handle the user's viewment of classes to enroll in as well as classes that the user is already enrolled in
     public class CourseController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -2,6 +2,7 @@
 
 namespace CourseScheduling.Models
 {
+    //Course table entity for database
     public class Course
     {
         [Key]

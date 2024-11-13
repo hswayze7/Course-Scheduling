@@ -1,5 +1,6 @@
 ﻿namespace CourseScheduling.Models
 {
+    //Table for Student entity
     public class Student
     {
         public int StudentId { get; set; }

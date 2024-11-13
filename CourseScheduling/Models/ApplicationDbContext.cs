@@ -2,7 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
-
+    //Database class that creates the database structure of the project
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

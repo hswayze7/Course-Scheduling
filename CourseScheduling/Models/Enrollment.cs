@@ -1,5 +1,6 @@
 ﻿namespace CourseScheduling.Models
 {
+    //Enrollment table for the database
     public class Enrollment
     {
         public int EnrollmentId { get; set; }  // Primary key
