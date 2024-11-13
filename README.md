@@ -9,7 +9,7 @@ Members for the Flash Rider Group for this project:
 - Md Mehedi Hasan Chowdhury
 
 
-<h3 align="center">Features included:</h3>
+<h2 align="center">Features included:</h2>
 
 - Feature 1: User login system
 
@@ -21,7 +21,7 @@ Members for the Flash Rider Group for this project:
 
 
 
-<h2 align="center">Current screenshots of UI:</h2>
+<h3 align="center">Current screenshots of UI:</h3>
 
 Login Page:
 
