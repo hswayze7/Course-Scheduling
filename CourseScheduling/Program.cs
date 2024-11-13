@@ -1,5 +1,7 @@
 
 using CourseScheduling.Models;
+//using CourseScheduling.Services;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();  // Add session support
+
+//builder.Services.AddTransient<Scraper>();
 
 // Configure ApplicationDbContext with the connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

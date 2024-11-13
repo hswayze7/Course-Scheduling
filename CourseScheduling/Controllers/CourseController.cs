@@ -1,4 +1,5 @@
 ﻿using CourseScheduling.Models;
+//using CourseScheduling.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,10 +12,13 @@ namespace CourseScheduling.Controllers
     public class CourseController : Controller
     {
         private readonly ApplicationDbContext _context;
+        //private readonly Scraper _scraper;
 
         public CourseController(ApplicationDbContext context)
         {
             _context = context;
+            //_scraper = scraper;
+
         }
 
         // Show the list of available courses
@@ -35,7 +39,7 @@ namespace CourseScheduling.Controllers
                 .ThenInclude(e => e.Course)
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
 
-            
+
             var enrolledCourses = student?.Enrollments.ToList() ?? new List<Enrollment>();
 
             var viewModel = new CourseEnrollmentViewModel
@@ -46,6 +50,53 @@ namespace CourseScheduling.Controllers
 
             return View(viewModel); // Pass the view model to the view
         }
+
+        //Created for the continue button on the search page. This will allow a user to skip the search option for classes and go straight to the list of classes
+        public async Task<IActionResult> ListCourses(string courseName = null, string courseCode = null)
+        {
+            // Retrieve the studentId from the session
+            var studentId = HttpContext.Session.GetInt32("StudentId");
+            if (studentId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to login if not logged in
+            }
+
+            // Query all courses or apply filters based on search input
+            var query = _context.Courses.AsQueryable();
+
+            if (!string.IsNullOrEmpty(courseName))
+            {
+                query = query.Where(c => c.CourseName.Contains(courseName));
+            }
+
+            if (!string.IsNullOrEmpty(courseCode))
+            {
+                query = query.Where(c => c.CourseCode.Contains(courseCode));
+            }
+
+            var availableCourses = await query.ToListAsync();
+
+            // Fetch the student's enrolled courses
+            var student = await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Course)
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
+            var enrolledCourses = student?.Enrollments.ToList() ?? new List<Enrollment>();
+
+            // Create the view model, passing both available and enrolled courses
+            var viewModel = new CourseEnrollmentViewModel
+            {
+                AvailableCourses = availableCourses,
+                EnrolledCourses = enrolledCourses,
+                SearchCourseName = courseName,
+                SearchCourseCode = courseCode
+            };
+
+            return View("Index", viewModel); // Use Index.cshtml to display courses
+        }
+
+
 
 
         // Enroll in a course
@@ -242,7 +293,68 @@ namespace CourseScheduling.Controllers
             return uniqueEventDates.ToList();
         }
 
+      //  [HttpPost]
+    /*    public async Task<IActionResult> ImportCourses()
+        {
+            var url = "http://catalog.wichita.edu/undergraduate/courses/cs/";
+            var courses = await _scraper.ScrapeCourseCatalogAsync(url);
 
+            foreach (var course in courses)
+            {
+                if (!_context.Courses.Any(c => c.CourseName == course.Title))
+                {
+                    _context.Courses.Add(new CourseScheduling.Models.Course
+                    {
+                        CourseName = course.Title,
+                        Description = course.CourseName,
+                        Credits = course.Credits
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Courses imported successfully.");
+        }
+*/
+        public IActionResult Search()
+        {
+            var viewModel = new SearchViewModel
+            {
+                CourseName = string.Empty,
+                CourseCode = null,
+                Results = new List<Course>()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchResults(string CourseName, string CourseCode)
+        {
+            var query = _context.Courses.AsQueryable();
+
+            if (!string.IsNullOrEmpty(CourseName))
+            {
+                query = query.Where(c => c.CourseName.Contains(CourseName));
+            }
+
+            if (!string.IsNullOrEmpty(CourseCode))
+            {
+                query = query.Where(c => c.CourseCode.Contains( CourseCode)); // Adjust to handle string IDs
+            }
+
+            var results = await query.ToListAsync();
+
+            var viewModel = new SearchViewModel
+            {
+                CourseName = CourseName,
+                CourseCode = CourseCode,
+                Results = results
+            };
+
+            return View("Search", viewModel);
+        }
 
 
 

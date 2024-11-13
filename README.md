@@ -40,3 +40,12 @@ Calender that shows the schedule of the classes currently enrolled in by the stu
 
 
 ![calenderviewclass](https://github.com/user-attachments/assets/07b64ebd-ff7b-40f1-83f9-d8fd4ddf5566)
+
+
+
+
+Search for courses page:
+
+
+
+![searchcourses](https://github.com/user-attachments/assets/c9dd7801-2603-42c7-9315-87a8eb7d703f)

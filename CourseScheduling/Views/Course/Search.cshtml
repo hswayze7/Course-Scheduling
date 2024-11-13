@@ -1,0 +1,65 @@
+﻿@model CourseScheduling.Models.SearchViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Search for Courses</h2>
+
+        <form asp-action="CourseDetails" method="get" class="mb-4">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="CourseName">Course Name</label>
+                    <input type="text" class="form-control" id="CourseName" name="CourseName" value="@Model.CourseName" placeholder="Enter course name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="CourseId">Course ID</label>
+                    <input type="text" class="form-control" id="CourseId" name="CourseId" value="@Model.CourseCode" placeholder="Enter course ID">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search Course</button>
+        <a href="/Course/ListCourses" class="btn btn-primary ml-2">Continue to All Courses</a>
+
+
+        </form>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        @if (Model.Results != null && Model.Results.Any())
+        {
+            <h3 class="mt-4">Search Results</h3>
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Course Name</th>
+                        <th>Description</th>
+                        <th>Credits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.Results)
+                    {
+                        <tr>
+                            <td>@course.CourseCode</td>
+                            <td>@course.CourseName</td>
+                            <td>@course.Description</td>
+                            <td>@course.Credits</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (Model.Results != null)
+        {
+            <p class="text-muted mt-4">No courses found matching the search criteria.</p>
+        }
+    </div>
+
+}

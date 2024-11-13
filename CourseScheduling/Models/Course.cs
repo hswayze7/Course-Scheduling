@@ -19,5 +19,6 @@ namespace CourseScheduling.Models
 
 
         public ICollection<Enrollment> Enrollments { get; set; }
+        public string Description { get;  set; }
     }
 }
