@@ -1,10 +1,8 @@
-<p align="center">
 
-	<strong>Course Scheduling</strong><br>
 
-	This is a project for Senior Design 1
 
-</p>
+<h1 align="center">Course Scheduling</h1>
+<p align="center">This is a project for Senior Design 1</p>
 
 
 
