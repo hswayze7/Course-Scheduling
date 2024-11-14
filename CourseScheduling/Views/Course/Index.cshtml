@@ -6,19 +6,17 @@
 
 @Html.AntiForgeryToken()
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <h2 class="text-primary">Available Courses</h2>
 
-    <!-- Display student name if logged in -->
     @if (ViewBag.StudentName != null)
     {
         <p class="text-success">Welcome, <strong>@ViewBag.StudentName</strong>!</p>
     }
 
-    <!-- Table for selecting courses to enroll in -->
     <h3>Select Courses to Enroll</h3>
-    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-        <table class="table table-bordered table-hover table-striped mb-5">
+    <div class="table-responsive mb-4" style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-bordered table-hover table-striped">
             <thead class="thead-dark">
                 <tr>
                     <th>Course Code</th>
@@ -30,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var course in Model.AvailableCourses) 
+                @foreach (var course in Model.AvailableCourses)
                 {
                     <tr>
                         <td>@course.CourseCode</td>
@@ -39,80 +37,58 @@
                         <td>@course.Time</td>
                         <td>@course.Professor</td>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="console.log('Enroll button clicked'); enroll(@course.CourseId)">Enroll</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="enroll(@course.CourseId)">Enroll</button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-    <!-- Enrolled courses section -->
-    <div class="container mt-4">
-        <h2 class="text-primary">Your Enrolled Courses</h2>
 
-        <!-- Enrolled courses table -->
-        <div id="enrolledCourses">
-            @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+    <div class="row">
+        <!-- Enrolled Courses Section -->
+        <div class="col-md-6 mb-4">
+            <h2 class="text-primary">Your Enrolled Courses</h2>
+            <h3>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h3>
+            <div id="enrolledCourses" class="table-responsive" style="border: 1px solid #ddd; padding: 10px;">
+                @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+            </div>
         </div>
 
-        <!-- Calendar object -->
-        <h3 class="text-secondary mt-4">Class Schedule</h3>
-        <div id="calendar"></div>
+        <!-- Calendar Section -->
+        <div class="col-md-6 mb-4">
+            <h2 class="text-primary">Class Schedule</h2>
+            <div id="calendar" style="border: 1px solid #ddd; padding: 10px; min-height: 700px; width: 100%;"></div>
+        </div>
     </div>
-   
 </div>
 
-
-
 <script>
+    //Function for when the student enrolls into a course. Will also update the calendar object and the enrolled classes table
     async function enroll(courseId) {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-        console.log("CourseId being passed:", courseId);
-
         try {
-            // First, enroll the student
             const response = await fetch('/Course/Enroll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': token
                 },
-                body: JSON.stringify({ courseId: courseId })  // Pass the courseId
+                body: JSON.stringify({ courseId: courseId })
             });
-
             if (response.ok) {
-                console.log("Enrollment successful.");
-
-                // Fetch the updated enrolled courses after successful enrollment
-                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable', {
-                    method: 'GET'
-                });
-
-                if (enrolledCoursesResponse.ok) {
-                    const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
-                    document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
-                    updateCalendar(); //Should update the calendar
-                } 
-                else 
-                {
-                    console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
-                }
-            }   
-            else 
-                {
+                console.log("Enrollment successful");
+                await refreshEnrolledCourses();
+                updateCalendar();
+            } else {
                 console.error("Failed to enroll. Response code: " + response.status);
-                }
-        } 
-        catch (error) 
-        {
+            }
+        } catch (error) {
             console.error("Error during enrollment:", error);
         }
     }
 
-</script>
-
-<script>
+    //Function to delete a class after being enrolled.
     async function deleteEnrollment(enrollmentId) {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -135,30 +111,53 @@
                 });
 
                 if (enrolledCoursesResponse.ok) {
-                    const html = await enrolledCoursesResponse.text();  // Fetch the updated HTML for enrolled courses
-                    document.getElementById("enrolledCourses").innerHTML = html;  // Update the enrolled courses table
-                    updateCalendar(); //Should update the calendar when course is deleted
-                } 
-                else 
-                {
-                    console.error("Failed to fetch enrolled courses. Response code: " + enrolledCoursesResponse.status);
+                    const html = await enrolledCoursesResponse.text();
+                    document.getElementById("enrolledCourses").innerHTML = html;
+                    updateCalendar();  // Update the calendar view
+                    updateTotalCredits();  // Update the total credits
+                } else {
+                    console.error("Failed to fetch updated enrolled courses.");
                 }
-            } 
-            else 
-            {
-                console.error("Failed to delete enrollment. Response code: " + response.status);
+            } else {
+                console.error("Failed to delete enrollment. Status:", response.status);
             }
-        } 
-        catch (error) 
-        {
+        } catch (error) {
             console.error("Error during deletion:", error);
         }
     }
 
-</script>
+    //Refresh the enroll table and calendar object when deleting / enrolling in classes.
+    async function refreshEnrolledCourses() {
+        try {
+            const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable');
+            if (enrolledCoursesResponse.ok) {
+                const html = await enrolledCoursesResponse.text();
+                document.getElementById("enrolledCourses").innerHTML = html;
+                await updateTotalCredits();  // Update total credits after refreshing enrolled courses
+            } else {
+                console.error("Failed to fetch enrolled courses table.");
+            }
+        } catch (error) {
+            console.error("Error fetching enrolled courses:", error);
+        }
+    }
 
-<!--Addition of calendar to page that shows how a student's day / schedule will look-->
-<script>
+    //Function to update the total number of credit hours a student is enrolled in after enrolling in another course
+    async function updateTotalCredits() {
+        try {
+            const response = await fetch('/Course/GetTotalCredits');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("totalCredits").innerText = data.totalCredits;
+            } else {
+                console.error("Failed to update total credits. Response code: " + response.status);
+            }
+        } catch (error) {
+            console.error("Error updating total credits:", error);
+        }
+    }
+
+    //Creatation of calendar object
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -170,26 +169,42 @@
             },
             events: async function (fetchInfo, successCallback, failureCallback) {
                 try {
-                    // Fetch the events from your server
                     let response = await fetch('/Course/GetEnrolledCourses');
                     if (response.ok) {
                         let events = await response.json();
-                        successCallback(events); // Load events into the calendar
-                    } else {
-                        console.error("Failed to fetch events.");
+                        successCallback(events);
                     }
                 } catch (error) {
                     console.error("Error fetching events:", error);
                 }
             },
-            eventColor: '#378006' // Set color
+            eventColor: '#378006'
         });
 
         calendar.render();
-
         window.updateCalendar = function () {
-            calendar.refetchEvents(); // Refresh events from the server
+            calendar.refetchEvents();
         };
     });
 </script>
 
+<style>
+    <!-- Additional styling to help with UI (did not help honestly. Needs more work) -->
+    .container-fluid {
+        padding: 0 2%;
+    }
+
+    .row > .col-md-6 {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    #enrolledCourses .table-responsive {
+        overflow: visible;
+    }
+
+    #calendar {
+        width: 100%;
+        min-height: 700px;
+    }
+</style>

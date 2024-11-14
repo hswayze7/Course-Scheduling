@@ -11,9 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
-builder.Services.AddSession();  // Add session support
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Adjust session timeout as needed
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
+//builder.Services.AddSession();  // Add session support
 
 //builder.Services.AddTransient<Scraper>();
+
 
 // Configure ApplicationDbContext with the connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -39,6 +51,7 @@ app.UseRouting();
 app.UseSession();
 
 app.UseAuthorization();
+
 
 app.UseEndpoints(endpoints =>
 {

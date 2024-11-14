@@ -52,3 +52,11 @@ Search for courses page:
 
 
 ![searchcourses](https://github.com/user-attachments/assets/c9dd7801-2603-42c7-9315-87a8eb7d703f)
+
+
+
+
+Logout button added in a tabbar. Total credit are now shown of the enrolled classes:
+
+
+![logoutbutton and totalcredits](https://github.com/user-attachments/assets/99b19cc8-0f59-400f-8a25-7a5b6f3b3532)

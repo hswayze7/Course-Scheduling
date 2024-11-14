@@ -42,14 +42,35 @@ namespace CourseScheduling.Controllers
 
             var enrolledCourses = student?.Enrollments.ToList() ?? new List<Enrollment>();
 
+            //Declaration of variable to add / total the amount of credits for all courses enrolled in by student
+            int totalCredits = enrolledCourses.Sum(e => e.Course?.Credits ?? 0);
+
             var viewModel = new CourseEnrollmentViewModel
             {
                 AvailableCourses = availableCourses,
                 EnrolledCourses = enrolledCourses
+                
             };
 
             return View(viewModel); // Pass the view model to the view
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTotalCredits()
+        {
+            var studentId = HttpContext.Session.GetInt32("StudentId");
+            if (studentId == null)
+            {
+                return Unauthorized("Student not logged in.");
+            }
+
+            var totalCredits = await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .SumAsync(e => e.Course.Credits);
+
+            return Json(new { totalCredits });
+        }
+
 
         //Created for the continue button on the search page. This will allow a user to skip the search option for classes and go straight to the list of classes
         public async Task<IActionResult> ListCourses(string courseName = null, string courseCode = null)
@@ -228,7 +249,7 @@ namespace CourseScheduling.Controllers
             return PartialView("_EnrolledCourses", enrollments);
         }
 
-
+        //Function to help populate the calendar object and split up the string to determine when classes are
         private List<DateTime> GetDateTimesForEvent(string timeString, string type)
         {
             // Mapping of days to DayOfWeek values

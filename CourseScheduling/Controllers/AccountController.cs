@@ -1,5 +1,6 @@
 ﻿using CourseScheduling.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using System.Linq;
 
 namespace CourseScheduling.Controllers
@@ -63,7 +64,7 @@ namespace CourseScheduling.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();  // Clear the session
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

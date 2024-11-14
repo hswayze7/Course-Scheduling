@@ -14,7 +14,24 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 </head>
 <body>
-    @RenderBody()
+    <!-- Navbar with Logout Button -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Course Scheduling</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <!-- Logout Button -->
+                <li class="nav-item">
+                    <a href="~/Account/Logout" class="btn btn-outline-danger">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content area -->
+    <div class="container mt-6">
+        @RenderBody()
+    </div>
 
     <!-- Bootstrap JS via CDN -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
