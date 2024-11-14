@@ -63,6 +63,7 @@ namespace CourseScheduling.Controllers
         // Logout 
         public IActionResult Logout()
         {
+            TempData["LogoutMessage"] = "You have successfully logged out."; //Displays a message after logging out stating that the action was successful
             HttpContext.Session.Clear();  // Clear the session
             return RedirectToAction("Login", "Account");
         }

@@ -5,6 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["LogoutMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["LogoutMessage"]
+    </div>
+}
+
 <div class="container">
     <!-- Create a centered form with Bootstrap's grid and spacing utilities -->
     <div class="row justify-content-center">

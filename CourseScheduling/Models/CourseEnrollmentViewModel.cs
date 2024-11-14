@@ -1,5 +1,6 @@
 ﻿namespace CourseScheduling.Models
 {
+    //Model to handle the course enrollment page and variables included
     public class CourseEnrollmentViewModel
     {
         public List<Course> AvailableCourses { get; set; }
