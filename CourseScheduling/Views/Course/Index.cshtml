@@ -1,4 +1,5 @@
-﻿@model CourseScheduling.Models.CourseEnrollmentViewModel
+﻿@model CourseEnrollmentViewModel
+@using CourseScheduling.ViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,7 +8,7 @@
 @Html.AntiForgeryToken()
 
 <div class="container-fluid mt-4">
-    <h2 class="text-primary">Available Courses</h2>
+    
 
     @if (ViewBag.StudentName != null)
     {
@@ -15,34 +16,28 @@
     }
 
     <h3>Select Courses to Enroll</h3>
-    <div class="table-responsive mb-4" style="max-height: 300px; overflow-y: auto;">
-        <table class="table table-bordered table-hover table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    <th>Credits</th>
-                    <th>Time</th>
-                    <th>Professor</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var course in Model.AvailableCourses)
-                {
-                    <tr>
-                        <td>@course.CourseCode</td>
-                        <td>@course.CourseName</td>
-                        <td>@course.Credits</td>
-                        <td>@course.Time</td>
-                        <td>@course.Professor</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm" onclick="enroll(@course.CourseId)">Enroll</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <!-- Search form -->
+    <div class="container mt-4">
+        <h2 class="text-primary">Available Courses</h2>
+
+        <!-- Search form -->
+        <form id="searchForm" asp-action="SearchCourses" method="get" class="mb-4">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="text" name="courseName" class="form-control" placeholder="Enter Course Name" />
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" name="courseCode" class="form-control" placeholder="Enter Course Code" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="button" class="btn btn-secondary ml-2" onclick="resetTable()">Reset</button>
+        </form>
+
+        <!-- Available Courses table -->
+        <div id="availableCoursesTable">
+            @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
+        </div>
     </div>
 
     <div class="row">
@@ -142,6 +137,8 @@
         }
     }
 
+
+
     //Function to update the total number of credit hours a student is enrolled in after enrolling in another course
     async function updateTotalCredits() {
         try {
@@ -187,6 +184,37 @@
         };
     });
 </script>
+<script>
+    document.getElementById("searchForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const courseName = document.querySelector("input[name='courseName']").value;
+        const courseCode = document.querySelector("input[name='courseCode']").value;
+
+        fetch(`/Course/SearchCourses?courseName=${courseName}&courseCode=${courseCode}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("availableCoursesTable").innerHTML = html; // Update the table
+            })
+            .catch(error => console.error("Error:", error));
+    });
+
+    function resetTable() {
+        fetch(`/Course/Index`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const tableContent = doc.querySelector("#availableCoursesTable").innerHTML;
+                document.getElementById("availableCoursesTable").innerHTML = tableContent;
+
+                document.querySelector("input[name='courseName']").value = "";
+                document.querySelector("input[name='courseCode']").value = "";
+            })
+            .catch(error => console.error("Error:", error));
+    }
+</script>
+
 
 <style>
     <!-- Additional styling to help with UI (did not help honestly. Needs more work) -->

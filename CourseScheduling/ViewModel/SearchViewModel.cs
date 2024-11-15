@@ -1,4 +1,7 @@
-﻿namespace CourseScheduling.Models
+﻿using CourseScheduling.Models;
+using CourseScheduling.ViewModel;
+
+namespace CourseScheduling.ViewModel
 {
     public class SearchViewModel
     {

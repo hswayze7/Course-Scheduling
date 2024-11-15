@@ -1,4 +1,6 @@
 ﻿using CourseScheduling.Models;
+using CourseScheduling.ViewModel;
+
 //using CourseScheduling.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +73,27 @@ namespace CourseScheduling.Controllers
             return Json(new { totalCredits });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchCourses(string courseName, string courseCode)
+        {
+            var query = _context.Courses.AsQueryable();
+
+            if (!string.IsNullOrEmpty(courseName))
+            {
+                query = query.Where(c => c.CourseName.Contains(courseName));
+            }
+
+            if (!string.IsNullOrEmpty(courseCode))
+            {
+                query = query.Where(c => c.CourseCode.Contains(courseCode));
+            }
+
+            var availableCourses = await query.ToListAsync();
+
+            return PartialView("_AvailableCoursesTable", availableCourses); // Render just the table rows
+        }
+
+
 
         //Created for the continue button on the search page. This will allow a user to skip the search option for classes and go straight to the list of classes
         public async Task<IActionResult> ListCourses(string courseName = null, string courseCode = null)
@@ -116,6 +139,7 @@ namespace CourseScheduling.Controllers
 
             return View("Index", viewModel); // Use Index.cshtml to display courses
         }
+
 
 
 
@@ -222,8 +246,8 @@ namespace CourseScheduling.Controllers
                     calendarEvents.Add(new
                     {
                         title = enrollment.Course.CourseName,
-                        start = startDateTimes[i].ToString("s"), // ISO 8601 format
-                        end = endDateTimes[i].ToString("s")      // ISO 8601 format
+                        start = startDateTimes[i].ToString("s"), 
+                        end = endDateTimes[i].ToString("s")      
                     });
                 }
             }

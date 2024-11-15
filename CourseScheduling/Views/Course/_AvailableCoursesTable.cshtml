@@ -1,0 +1,30 @@
+﻿@model IEnumerable<CourseScheduling.Models.Course>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Credits</th>
+            <th>Time</th>
+            <th>Professor</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.CourseCode</td>
+                <td>@course.CourseName</td>
+                <td>@course.Credits</td>
+                <td>@course.Time</td>
+                <td>@course.Professor</td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="enroll(@course.CourseId)">Enroll</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

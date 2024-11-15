@@ -1,4 +1,4 @@
-﻿namespace CourseScheduling.Models
+﻿namespace CourseScheduling.ViewModel
 {
     //Model to handle the login process
     public class StudentLoginViewModel

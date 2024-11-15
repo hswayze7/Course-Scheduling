@@ -1,5 +1,6 @@
 ﻿using CourseScheduling.Models;
 using Microsoft.AspNetCore.Mvc;
+using CourseScheduling.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 
@@ -67,5 +68,43 @@ namespace CourseScheduling.Controllers
             HttpContext.Session.Clear();  // Clear the session
             return RedirectToAction("Login", "Account");
         }
+
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View(new RegisterViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Code to create user and save to the database
+                var student = new Student
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Password = model.Password, // Make sure to hash passwords in production
+                    Major = model.Major,
+                    Year = model.Year
+                };
+
+                _context.Students.Add(student);
+                await _context.SaveChangesAsync();
+                ViewBag.RegistrationSuccess = true;
+                // Set success message
+                //TempData["SuccessMessage"] = "Registration successful! Your account has been created.";
+
+                //return RedirectToAction("Login", "Account"); // Redirect to the login page or any other page
+                return View(model);
+                
+            }
+
+            return View(model);
+        }
+
     }
 }

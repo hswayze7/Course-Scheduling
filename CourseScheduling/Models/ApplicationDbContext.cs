@@ -39,7 +39,8 @@
                new Student
                {
                    StudentId = 1,  // Set a unique ID for the student
-                   Name = "Test Student",
+                   FirstName = "Test Student",
+                   LastName = "Onetest Student",
                    Email = "test@student.com",
                    Password = "test123",  
                    Major = "Computer Science",

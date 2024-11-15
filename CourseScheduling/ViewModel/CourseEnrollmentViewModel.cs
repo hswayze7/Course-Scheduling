@@ -1,4 +1,7 @@
-﻿namespace CourseScheduling.Models
+﻿using CourseScheduling.Models;
+using CourseScheduling.ViewModel;
+
+namespace CourseScheduling.ViewModel
 {
     //Model to handle the course enrollment page and variables included
     public class CourseEnrollmentViewModel
