@@ -60,3 +60,11 @@ Logout button added in a tabbar. Total credit are now shown of the enrolled clas
 
 
 ![logoutbutton and totalcredits](https://github.com/user-attachments/assets/99b19cc8-0f59-400f-8a25-7a5b6f3b3532)
+
+
+
+
+Description modal added to show more about the classes:
+
+
+![descofclasses](https://github.com/user-attachments/assets/4a815198-f5a9-4c8f-9f38-eacd6d7e7c31)

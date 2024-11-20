@@ -35,7 +35,7 @@
         </form>
 
         <!-- Available Courses table -->
-        <div id="availableCoursesTable">
+        <div id="availableCoursesTable" class="table-responsive">
             @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
         </div>
     </div>
@@ -57,6 +57,52 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap Modal to show more info on classes -->
+<div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Dynamic content goes here -->
+                <p><strong>Course Code:</strong> <span id="courseCode"></span></p>
+                <p><strong>Course Name:</strong> <span id="courseName"></span></p>
+                <p><strong>Credits:</strong> <span id="courseCredits"></span></p>
+                <p><strong>Time:</strong> <span id="courseTime"></span></p>
+                <p><strong>Professor:</strong> <span id="courseProfessor"></span></p>
+                <p><strong>Description:</strong> <span id="courseDescription"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+    Open Modal
+</button>
+
+<div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="basicModalLabel">Basic Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Test content.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     //Function for when the student enrolls into a course. Will also update the calendar object and the enrolled classes table
@@ -184,6 +230,7 @@
         };
     });
 </script>
+
 <script>
     document.getElementById("searchForm").addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the default form submission
@@ -215,24 +262,70 @@
     }
 </script>
 
+<script>
+    // Function to fetch and display course details in the modal
+    async function showCourseDetails(courseId) {
+        try {
+            const response = await fetch(`/Course/GetCourseDetails?courseId=${courseId}`);
+            if (response.ok) {
+                const data = await response.json();
+
+                // Populate modal content
+                document.getElementById("courseCode").textContent = data.courseCode;
+                document.getElementById("courseName").textContent = data.courseName;
+                document.getElementById("courseCredits").textContent = data.credits;
+                document.getElementById("courseTime").textContent = data.time;
+                document.getElementById("courseProfessor").textContent = data.professor;
+                document.getElementById("courseDescription").textContent = data.description;
+
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
+                modal.show();
+            } else {
+                console.error("Failed to fetch course details. Response code:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching course details:", error);
+        }
+    }
+
+    // Ensure Bootstrap modal is initialized globally (optional for debugging)
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('courseDetailsModal');
+        const modal = new bootstrap.Modal(modalElement);
+
+        // Optionally expose modal to global scope for debugging
+        window.courseDetailsModal = modal;
+    });
+</script>
+
+
+
 
 <style>
     <!-- Additional styling to help with UI (did not help honestly. Needs more work) -->
     .container-fluid {
-        padding: 0 2%;
+        padding: 0 15px;
     }
 
-    .row > .col-md-6 {
-        padding: 0;
-        max-width: 100%;
-    }
-
-    #enrolledCourses .table-responsive {
-        overflow: visible;
+    #availableCoursesTable table {
+        margin-top: 15px;
     }
 
     #calendar {
-        width: 100%;
-        min-height: 700px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        background-color: #f9f9f9;
     }
+
+    .modal-body {
+        font-size: 1rem;
+    }
+
+    .table-hover tr:hover {
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+
 </style>

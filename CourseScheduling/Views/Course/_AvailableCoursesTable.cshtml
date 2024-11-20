@@ -14,14 +14,15 @@
     <tbody>
         @foreach (var course in Model)
         {
-            <tr>
+            <tr onclick="showCourseDetails(@course.CourseId)" style="cursor: pointer;">
                 <td>@course.CourseCode</td>
                 <td>@course.CourseName</td>
                 <td>@course.Credits</td>
                 <td>@course.Time</td>
                 <td>@course.Professor</td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="enroll(@course.CourseId)">Enroll</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="event.stopPropagation(); enroll(@course.CourseId)">Enroll</button>
+
                 </td>
             </tr>
         }

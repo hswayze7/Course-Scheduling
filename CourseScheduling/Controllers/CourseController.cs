@@ -401,6 +401,25 @@ namespace CourseScheduling.Controllers
             return View("Search", viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCourseDetails(int courseId)
+        {
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.CourseId == courseId);
+            if (course == null)
+            {
+                return NotFound("Course not found.");
+            }
+
+            return Json(new
+            {
+                course.CourseName,
+                course.CourseCode,
+                course.Credits,
+                course.Time,
+                course.Professor,
+                course.Description
+            });
+        }
 
 
     }
