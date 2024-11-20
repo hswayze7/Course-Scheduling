@@ -81,30 +81,30 @@ namespace CourseScheduling.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Code to create user and save to the database
                 var student = new Student
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    Password = model.Password, // Make sure to hash passwords in production
+                    Password = model.Password, // Use hashed passwords in production
                     Major = model.Major,
                     Year = model.Year
                 };
 
                 _context.Students.Add(student);
                 await _context.SaveChangesAsync();
-                ViewBag.RegistrationSuccess = true;
-                // Set success message
-                //TempData["SuccessMessage"] = "Registration successful! Your account has been created.";
 
-                //return RedirectToAction("Login", "Account"); // Redirect to the login page or any other page
-                return View(model);
-                
+                // Indicate success
+                ViewBag.RegistrationSuccess = true;
+
+                // Render the view to show the modal
+                return View();
             }
 
+            // If ModelState is invalid, return the form with errors
             return View(model);
         }
+
 
     }
 }
