@@ -1,6 +1,4 @@
-﻿@model IEnumerable<CourseScheduling.Models.Course>
-
-<table class="table table-bordered table-hover table-striped">
+﻿<table class="table table-bordered table-hover table-striped">
     <thead class="thead-dark">
         <tr>
             <th>Course Code</th>
@@ -8,24 +6,50 @@
             <th>Credits</th>
             <th>Time</th>
             <th>Professor</th>
+            <th>Seats Available</th> <!-- New Column for Available Seats -->
             <th>Action</th>
         </tr>
     </thead>
+    
     <tbody>
         @foreach (var course in Model)
         {
-            <tr onclick="showCourseDetails(@course.CourseId)" style="cursor: pointer;">
+            var enrolledCourses = ViewBag.EnrolledCourses as List<CourseScheduling.Models.Enrollment>;
+            var waitlistedCourses = ViewBag.WaitlistedCourses as List<CourseScheduling.Models.Waitlist>;
+
+            bool isEnrolled = enrolledCourses != null && enrolledCourses.Any(e => e.CourseId == course.CourseId);
+            bool isWaitlisted = waitlistedCourses != null && waitlistedCourses.Any(w => w.CourseId == course.CourseId);
+
+            int availableSeats = course.MaxCapacity - course.CurrentEnrollment;
+
+            <tr id="courseRow-@course.CourseId" style="cursor: pointer;" onclick="showCourseDetails(@course.CourseId)">
                 <td>@course.CourseCode</td>
                 <td>@course.CourseName</td>
                 <td>@course.Credits</td>
                 <td>@course.Time</td>
                 <td>@course.Professor</td>
+                <td class="seatsColumn">@availableSeats / @course.MaxCapacity</td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="event.stopPropagation(); enroll(@course.CourseId)">Enroll</button>
-
+                    @if (isEnrolled)
+                    {
+                        <button type="button" class="btn btn-success btn-sm enrollButton" onclick="event.stopPropagation(); deleteEnrollment(event, @enrolledCourses.First(e => e.CourseId == course.CourseId).EnrollmentId)">Enrolled</button>
+                    }
+                    else if (isWaitlisted)
+                    {
+                        <button type="button" class="btn btn-warning btn-sm" disabled>Waitlisted</button>
+                    }
+                    else if (availableSeats <= 0)
+                    {
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Full</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary btn-sm enrollButton" onclick="enroll(event, @course.CourseId)">Enroll</button>
+                    }
                 </td>
             </tr>
         }
     </tbody>
-</table>
 
+
+</table>

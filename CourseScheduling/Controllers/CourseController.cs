@@ -24,38 +24,45 @@ namespace CourseScheduling.Controllers
         }
 
         // Show the list of available courses
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
+            // Get the logged-in student's ID from the session
             var studentId = HttpContext.Session.GetInt32("StudentId");
-
             if (studentId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
+            // Fetch all available courses
             var availableCourses = await _context.Courses.ToListAsync();
 
             // Fetch the student's enrolled courses
-            var student = await _context.Students
-                .Include(s => s.Enrollments)
-                .ThenInclude(e => e.Course)
-                .FirstOrDefaultAsync(s => s.StudentId == studentId);
+            var enrolledCourses = await _context.Enrollments
+                .Where(e => e.StudentId == studentId)
+                .Include(e => e.Course)
+                .ToListAsync();
 
+            // Fetch the student's waitlisted courses
+            var waitlistedCourses = await _context.Waitlists
+                .Where(w => w.StudentId == studentId)
+                .Select(w => w.Course)
+                .ToListAsync();
 
-            var enrolledCourses = student?.Enrollments.ToList() ?? new List<Enrollment>();
+            // Pass the data to the view using ViewBag or ViewModel
+            ViewBag.EnrolledCourses = enrolledCourses;
+            ViewBag.WaitlistedCourses = waitlistedCourses;
 
-            //Declaration of variable to add / total the amount of credits for all courses enrolled in by student
-            int totalCredits = enrolledCourses.Sum(e => e.Course?.Credits ?? 0);
-
+            // Prepare the view model
             var viewModel = new CourseEnrollmentViewModel
             {
                 AvailableCourses = availableCourses,
                 EnrolledCourses = enrolledCourses
-                
             };
 
-            return View(viewModel); // Pass the view model to the view
+            return View(viewModel);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetTotalCredits()
@@ -148,14 +155,14 @@ namespace CourseScheduling.Controllers
         [HttpPost]
         public async Task<IActionResult> Enroll([FromBody] EnrollViewModel model)
         {
-            //Getting student ID
+            // Getting student ID
             var studentId = HttpContext.Session.GetInt32("StudentId");
-            //Error checking
             if (studentId == null)
             {
                 return Unauthorized("Student not logged in.");
             }
-            //Error checking for courseID to make sure course is there
+
+            // Error checking for courseID to make sure course is there
             if (model.CourseId <= 0)
             {
                 return BadRequest("Invalid courseId.");
@@ -170,10 +177,16 @@ namespace CourseScheduling.Controllers
                 return BadRequest("You are already enrolled in this course.");
             }
 
+            // Find the course and check availability
             var course = await _context.Courses.FindAsync(model.CourseId);
             if (course == null)
             {
                 return BadRequest("Course not found.");
+            }
+
+            if (course.CurrentEnrollment >= course.MaxCapacity)
+            {
+                return BadRequest("Course is full.");
             }
 
             // Create a new enrollment
@@ -185,34 +198,53 @@ namespace CourseScheduling.Controllers
             };
 
             _context.Enrollments.Add(enrollment);
+            course.CurrentEnrollment += 1; // Update enrollment count
             await _context.SaveChangesAsync();
 
-            return Ok("Enrollment successful.");
+            // Return the updated course data to the client
+            return Json(new
+            {
+                courseId = course.CourseId,
+                courseCode = course.CourseCode,
+                courseName = course.CourseName,
+                credits = course.Credits,
+                time = course.Time,
+                professor = course.Professor,
+                maxCapacity = course.MaxCapacity,
+                currentEnrollment = course.CurrentEnrollment
+            });
         }
+
+
+
 
         //Gives the student an option to delete a course after selecting to enroll in said course
         [HttpPost]
         public async Task<IActionResult> DeleteEnrollment([FromBody] int enrollmentId)
         {
-            var studentId = HttpContext.Session.GetInt32("StudentId");
-            if (studentId == null)
-            {
-                return Unauthorized("Student not logged in.");
-            }
-
-            var enrollment = await _context.Enrollments
-                .FirstOrDefaultAsync(e => e.EnrollmentId == enrollmentId && e.StudentId == studentId);
-
+            var enrollment = await _context.Enrollments.FindAsync(enrollmentId);
             if (enrollment == null)
             {
-                return BadRequest("Enrollment not found or not authorized to delete.");
+                return NotFound("Enrollment not found.");
+            }
+
+            var course = await _context.Courses.FindAsync(enrollment.CourseId);
+            if (course == null)
+            {
+                return NotFound("Course not found.");
             }
 
             _context.Enrollments.Remove(enrollment);
+            course.CurrentEnrollment -= 1; // Decrement the current enrollment count
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("Enrollment deleted successfully.");
-            return Ok("Enrollment deleted successfully.");
+            // Return the updated course data to the client
+            return Json(new
+            {
+                courseId = course.CourseId,
+                currentEnrollment = course.CurrentEnrollment,
+                maxCapacity = course.MaxCapacity
+            });
         }
 
 

@@ -10,9 +10,14 @@ namespace CourseScheduling.ViewModel
         public List<Enrollment> EnrolledCourses { get; set; }
         public int TotalCredits => EnrolledCourses?.Sum(e => e.Course?.Credits ?? 0) ?? 0;  // Calculated from enrolled courses
 
+        // Helper to determine if a course is already enrolled
+        public HashSet<int> EnrolledCourseIds => EnrolledCourses.Select(e => e.CourseId).ToHashSet();
 
         public string SearchCourseName { get; set; }
         public string SearchCourseCode { get; set; }
+
+
+
     }
 
 }

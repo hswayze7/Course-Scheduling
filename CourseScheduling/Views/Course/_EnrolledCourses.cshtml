@@ -17,7 +17,7 @@
         <tbody>
             @foreach (var enrollment in Model)
             {
-                <tr>
+                <tr id="enrolledRow-@enrollment.EnrollmentId">
                     <td>@enrollment.Course.CourseCode</td>
                     <td>@enrollment.Course.CourseName</td>
                     <td>@enrollment.Course.Credits</td>
@@ -25,7 +25,7 @@
                     <td>@enrollment.Course.Professor</td>
                     <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
                     <td>
-                        <button type="button" class="btn btn-danger" onclick="deleteEnrollment(@enrollment.EnrollmentId)">Delete</button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteEnrollment(event, @enrollment.EnrollmentId)">Delete</button>
                     </td>
                 </tr>
             }

@@ -14,6 +14,12 @@ namespace CourseScheduling.Models
 
         public string Professor { get; set; }
 
+
+        public int MaxCapacity { get; set; }
+        public int CurrentEnrollment {  get; set; }
+
+
+        public ICollection<Waitlist> Waitlists { get; set; }
         
        
 

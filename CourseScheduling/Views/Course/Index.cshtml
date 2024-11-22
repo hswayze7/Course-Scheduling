@@ -8,66 +8,55 @@
 @Html.AntiForgeryToken()
 
 <div class="container-fluid mt-4">
-    
-
     @if (ViewBag.StudentName != null)
     {
         <p class="text-success">Welcome, <strong>@ViewBag.StudentName</strong>!</p>
     }
 
-    <h3>Select Courses to Enroll</h3>
-    <!-- Search form -->
-    <div class="container mt-4">
-        <h2 class="text-primary">Available Courses</h2>
-
-        <!-- Search form -->
-        <form id="searchForm" asp-action="SearchCourses" method="get" class="mb-4">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <input type="text" name="courseName" class="form-control" placeholder="Enter Course Name" />
-                </div>
-                <div class="form-group col-md-6">
-                    <input type="text" name="courseCode" class="form-control" placeholder="Enter Course Code" />
-                </div>
+    <!-- Main Content Section -->
+    <div class="row" style="padding: 15px;">
+        <!-- Available Courses Section -->
+        <div class="col-md-12 mb-4">
+            <h2 class="text-primary">Available Courses</h2>
+            <form id="searchForm" asp-action="SearchCourses" method="get" class="mb-4 d-flex justify-content-between">
+                <input type="text" name="courseName" class="form-control col-md-4" placeholder="Enter Course Name" />
+                <input type="text" name="courseCode" class="form-control col-md-4 ml-3" placeholder="Enter Course Code" />
+                <button type="submit" class="btn btn-primary ml-3">Search</button>
+                <button type="button" class="btn btn-secondary ml-3" onclick="resetTable()">Reset</button>
+            </form>
+            <div id="availableCoursesTable" class="table-responsive">
+                @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-            <button type="button" class="btn btn-secondary ml-2" onclick="resetTable()">Reset</button>
-        </form>
-
-        <!-- Available Courses table -->
-        <div id="availableCoursesTable" class="table-responsive">
-            @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
         </div>
     </div>
 
+    <!-- Schedule & Enrolled Courses Section -->
     <div class="row">
         <!-- Enrolled Courses Section -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-5 mb-4" style="padding-right: 25px;">
             <h2 class="text-primary">Your Enrolled Courses</h2>
             <h3>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h3>
-            <div id="enrolledCourses" class="table-responsive" style="border: 1px solid #ddd; padding: 10px;">
+            <div id="enrolledCourses" class="table-responsive" style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; max-height: 400px; overflow-y: auto;">
                 @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
             </div>
         </div>
 
         <!-- Calendar Section -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-7 mb-4" style="padding-left: 25px;">
             <h2 class="text-primary">Class Schedule</h2>
-            <div id="calendar" style="border: 1px solid #ddd; padding: 10px; min-height: 700px; width: 100%;"></div>
+            <div id="calendar" class="calendar-container" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px;"></div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap Modal to show more info on classes -->
+<!-- Bootstrap Modal for Course Details -->
 <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Dynamic content goes here -->
                 <p><strong>Course Code:</strong> <span id="courseCode"></span></p>
                 <p><strong>Course Name:</strong> <span id="courseName"></span></p>
                 <p><strong>Credits:</strong> <span id="courseCredits"></span></p>
@@ -82,33 +71,16 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
-    Open Modal
-</button>
-
-<div class="modal fade" id="basicModal" tabindex="-1" aria-labelledby="basicModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="basicModalLabel">Basic Modal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Test content.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <script>
     //Function for when the student enrolls into a course. Will also update the calendar object and the enrolled classes table
-    async function enroll(courseId) {
+    async function enroll(event, courseId) {
+        // Prevent triggering the row click event
+        event.stopPropagation();
+
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
         try {
+            // Enroll in the course
             const response = await fetch('/Course/Enroll', {
                 method: 'POST',
                 headers: {
@@ -117,8 +89,15 @@
                 },
                 body: JSON.stringify({ courseId: courseId })
             });
+
             if (response.ok) {
+                const updatedCourse = await response.json(); // Get updated course information
                 console.log("Enrollment successful");
+
+                // Update the corresponding row in the available courses table
+                updateCourseRow(updatedCourse);
+
+                // Refresh enrolled courses and update calendar
                 await refreshEnrolledCourses();
                 updateCalendar();
             } else {
@@ -129,8 +108,36 @@
         }
     }
 
+    function updateCourseRow(updatedCourse) {
+        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+        if (row) {
+            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+
+            // Update the seats column
+            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+
+            // Update the Enroll button
+            const enrollButton = row.querySelector('.enrollButton');
+            if (availableSeats <= 0) {
+                enrollButton.textContent = 'Full';
+                enrollButton.disabled = true;
+                enrollButton.classList.remove('btn-primary');
+                enrollButton.classList.add('btn-secondary');
+            } else {
+                enrollButton.textContent = 'Enrolled';
+                enrollButton.disabled = true;
+                enrollButton.classList.remove('btn-primary');
+                enrollButton.classList.add('btn-success');
+            }
+        }
+    }
+
+
     //Function to delete a class after being enrolled.
-    async function deleteEnrollment(enrollmentId) {
+  
+    async function deleteEnrollment(event, enrollmentId) {
+        event.stopPropagation(); // Prevent default row click behavior
+
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
         try {
@@ -144,21 +151,20 @@
             });
 
             if (response.ok) {
+                const updatedCourse = await response.json(); // Get the updated course information
                 console.log("Enrollment deleted successfully.");
 
-                // Fetch the updated enrolled courses after successful deletion
-                const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable', {
-                    method: 'GET'
-                });
+                // Update the course row in the available courses table
+                updateCourseRowOnDelete(updatedCourse);
 
-                if (enrolledCoursesResponse.ok) {
-                    const html = await enrolledCoursesResponse.text();
-                    document.getElementById("enrolledCourses").innerHTML = html;
-                    updateCalendar();  // Update the calendar view
-                    updateTotalCredits();  // Update the total credits
-                } else {
-                    console.error("Failed to fetch updated enrolled courses.");
-                }
+                // Remove the deleted course from the enrolled courses table
+                document.getElementById(`enrolledRow-${enrollmentId}`).remove();
+
+                // Update the calendar view
+                updateCalendar();
+
+                // Update the total credits the student is enrolled in
+                await updateTotalCredits();
             } else {
                 console.error("Failed to delete enrollment. Status:", response.status);
             }
@@ -166,6 +172,28 @@
             console.error("Error during deletion:", error);
         }
     }
+
+    // Function to update the available courses table row after deleting an enrollment
+    function updateCourseRowOnDelete(updatedCourse) {
+        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+        if (row) {
+            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+
+            // Update the seats column
+            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+
+            // Update the Enroll button
+            const enrollButton = row.querySelector('.enrollButton');
+            if (availableSeats > 0) {
+                enrollButton.textContent = 'Enroll';
+                enrollButton.disabled = false;
+                enrollButton.classList.remove('btn-secondary', 'btn-success');
+                enrollButton.classList.add('btn-primary');
+            }
+        }
+    }
+
+
 
     //Refresh the enroll table and calendar object when deleting / enrolling in classes.
     async function refreshEnrolledCourses() {
@@ -229,6 +257,8 @@
             calendar.refetchEvents();
         };
     });
+
+  
 </script>
 
 <script>
@@ -303,29 +333,52 @@
 
 
 <style>
-    <!-- Additional styling to help with UI (did not help honestly. Needs more work) -->
     .container-fluid {
-        padding: 0 15px;
+        padding: 0 20px;
     }
 
-    #availableCoursesTable table {
-        margin-top: 15px;
+    .row {
+        margin-bottom: 20px;
     }
 
-    #calendar {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
+    .calendar-container {
+        height: 700px;
         background-color: #f9f9f9;
     }
 
+    #availableCoursesTable table,
+    #enrolledCourses table {
+        width: 100%;
+    }
+
+    .table thead {
+        background-color: #f1f1f1;
+    }
+
+    .table td,
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+        padding: 15px;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+
     .modal-body {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
-    .table-hover tr:hover {
-        background-color: #f2f2f2;
-        cursor: pointer;
+    .btn-primary,
+    .btn-danger {
+        margin-right: 5px;
     }
 
+    /* Keep vertical scrollbar for overflow content and remove horizontal scrollbars */
+    .table-container {
+        overflow-x: hidden !important; /* Prevents horizontal scrollbar */
+    }
 </style>
+
