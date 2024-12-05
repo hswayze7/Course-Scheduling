@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    // Dictionary to store registered users
+    static Dictionary<string, string> registeredUsers = new Dictionary<string, string>();
+
+    static void Main(string[] args)
+    {
+        while (true)
+        {
+            Console.WriteLine("\nEnter 'register' to add a new user or 'exit' to quit:");
+            string action = Console.ReadLine().Trim().ToLower();
+
+            if (action == "register")
+            {
+                Console.Write("Enter username: ");
+                string username = Console.ReadLine().Trim();
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    RegisterUser(username);
+                }
+                else
+                {
+                    Console.WriteLine("Username cannot be empty!");
+                }
+            }
+            else if (action == "exit")
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid action! Please enter 'register' or 'exit'.");
+            }
+        }
+
+        DisplayRegisteredUsers();
+    }
+
+    static void RegisterUser(string username)
+    {
+        // Generate a unique ID for the user
+        string uniqueId = Guid.NewGuid().ToString();
+
+        // Store the user with their unique ID
+        registeredUsers[uniqueId] = username;
+
+        Console.WriteLine($"User '{username}' has been registered with ID: {uniqueId}");
+    }
+
+    static void DisplayRegisteredUsers()
+    {
+        Console.WriteLine("\nRegistered Users:");
+        foreach (var entry in registeredUsers)
+        {
+            Console.WriteLine($"ID: {entry.Key} -> Username: {entry.Value}");
+        }
+    }
+}
