@@ -7,16 +7,11 @@
 
 @Html.AntiForgeryToken()
 
-<div class="container-fluid mt-4">
-    @if (ViewBag.StudentName != null)
-    {
-        <p class="text-success">Welcome, <strong>@ViewBag.StudentName</strong>!</p>
-    }
-
-    <!-- Main Content Section -->
-    <div class="row" style="padding: 15px;">
-        <!-- Available Courses Section -->
-        <div class="col-md-12 mb-4">
+<!-- Main Content Section -->
+<div class="container-fluid">
+    <!-- Available Courses Section -->
+    <div class="row mb-4">
+        <div class="col-12">
             <h2 class="text-primary">Available Courses</h2>
             <form id="searchForm" asp-action="SearchCourses" method="get" class="mb-4 d-flex justify-content-between">
                 <input type="text" name="courseName" class="form-control col-md-4" placeholder="Enter Course Name" />
@@ -24,29 +19,37 @@
                 <button type="submit" class="btn btn-primary ml-3">Search</button>
                 <button type="button" class="btn btn-secondary ml-3" onclick="resetTable()">Reset</button>
             </form>
-            <div id="availableCoursesTable" class="table-responsive">
+            <div id="availableCoursesTable" class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                 @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
             </div>
         </div>
     </div>
 
     <!-- Schedule & Enrolled Courses Section -->
-    <div class="row">
-        <!-- Enrolled Courses Section -->
-        <div class="col-md-5 mb-4" style="padding-right: 25px;">
-            <h2 class="text-primary">Your Enrolled Courses</h2>
-            <h3>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h3>
-            <div id="enrolledCourses" class="table-responsive" style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; max-height: 400px; overflow-y: auto;">
-                @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+    <div class="container-fluid">
+        <!-- Schedule & Enrolled Courses Section -->
+        <div class="row mb-4">
+            <!-- Enrolled Courses Section -->
+            <div class="col-12">
+                <h2 class="text-primary">Your Enrolled Courses</h2>
+                <h4>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h4>
+                <div id="enrolledCourses" class="table-container">
+                    @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+                </div>
             </div>
         </div>
-
-        <!-- Calendar Section -->
-        <div class="col-md-7 mb-4" style="padding-left: 25px;">
-            <h2 class="text-primary">Class Schedule</h2>
-            <div id="calendar" class="calendar-container" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px;"></div>
+            <!-- Calendar Section -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-primary">Class Schedule</h2>
+                <div id="calendar" class="calendar-container"></div>
+            </div>
         </div>
     </div>
+
+</div>
+
+
 
 <!-- Bootstrap Modal for Course Details -->
 <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
@@ -329,56 +332,61 @@
     });
 </script>
 
-
-
-
 <style>
-    .container-fluid {
-        padding: 0 20px;
-    }
-
-    .row {
-        margin-bottom: 20px;
-    }
+/* Enrolled Courses Section */
+.table-container {
+    width: 100%; /* Ensure the table spans the full width */
+    max-width: 100%; /* Prevent overflow issues */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: auto; /* Allow height to adjust dynamically */
+    overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+}
 
     .calendar-container {
-        height: 700px;
-        background-color: #f9f9f9;
-    }
-
-    #availableCoursesTable table,
-    #enrolledCourses table {
-        width: 100%;
-    }
-
-    .table thead {
-        background-color: #f1f1f1;
-    }
-
-    .table td,
-    .table th {
-        text-align: center;
-        vertical-align: middle;
+        width: 100%; /* Full width */
+        max-width: 100%; /* Prevent unnecessary shrinking */
+        height: 700px; /* Slightly increased height for better visibility */
+        border: 1px solid #ddd;
+        border-radius: 10px;
         padding: 15px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Prevent content overflow */
     }
 
-    .btn {
-        font-size: 0.85rem;
-        padding: 8px 16px;
-    }
+/* Container and Row Styling */
+.container-fluid {
+    padding: 10px; /* Minimize container padding for more usable space */
+        max-width: 100%;
+}
 
-    .modal-body {
-        font-size: 1.1rem;
-    }
+.row {
+    margin: 0; /* Remove row margins to eliminate unnecessary spacing */
+    gap: 0; /* Remove gaps between sections */
+}
 
-    .btn-primary,
-    .btn-danger {
-        margin-right: 5px;
-    }
-
-    /* Keep vertical scrollbar for overflow content and remove horizontal scrollbars */
+/* Responsive Adjustments */
+@@media (min-width: 1200px) {
     .table-container {
-        overflow-x: hidden !important; /* Prevents horizontal scrollbar */
+        margin: 0 auto; /* Center the table horizontally */
     }
-</style>
+}
+
+@@media (max-width: 768px) {
+    .table-container {
+        width: 100%; /* Ensure the table takes full width on smaller screens */
+        overflow-x: scroll; /* Allow scrolling for narrow screens */
+    }
+}
+
+</style >
+
+
+
+
+
 
