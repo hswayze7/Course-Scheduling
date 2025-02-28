@@ -3,108 +3,125 @@ using Microsoft.AspNetCore.Mvc;
 using CourseScheduling.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System.Threading.Tasks;
+using CourseScheduling.Services;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace CourseScheduling.Controllers
 {
-    //Controller to handle that user login.
+    [Route("Account")]
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context; //Inject DB
+        private readonly StudentService _studentService; // Inject StudentService
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context, StudentService studentService)
         {
             _context = context;
+            _studentService = studentService;
         }
 
-        // Display the login form
-        [HttpGet]
+        // Display login form
+        [HttpGet("Login")]
         public IActionResult Login()
         {
             return View();
         }
 
         // Handle login logic
-        [HttpPost]
+        [HttpPost("Login")]
         public IActionResult Login(StudentLoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Check if the student exists in the database
-                if (model == null)
-                {
-                    return BadRequest("Model cannot be null.");
-                }
-
-                Console.WriteLine($"StudentId: {model.StudentId}, Password: {model.Password}");
-
-                var student = _context.Students
-                    .FirstOrDefault(s => s.StudentId == model.StudentId && s.Password == model.Password);
-
-                if (student == null)
-                {
-                    return Unauthorized("Invalid student ID or password.");
-                }
-
-                if (student != null)
-                {
-                    // Set authentication
-                    HttpContext.Session.SetInt32("StudentId", student.StudentId);
-                    //return RedirectToAction("Index", "Course");  // Redirect to the course page
-                    return RedirectToAction("Search", "Course"); //Goes to the search page
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid student ID or password.");
-                }
+                return View(model);
             }
 
-            return View(model);
+            if (model == null)
+            {
+                return BadRequest("Model cannot be null.");
+            }
+
+            var student = _context.Students.FirstOrDefault(s => s.StudentId == model.StudentId);
+
+
+            // Set authentication
+            HttpContext.Session.SetInt32("StudentId", student.StudentId);
+
+            return RedirectToAction("Search", "Course"); // Redirect to search page
         }
 
-        // Logout 
-        public IActionResult Logout()
-        {
-            TempData["LogoutMessage"] = "You have successfully logged out."; //Displays a message after logging out stating that the action was successful
-            HttpContext.Session.Clear();  // Clear the session
-            return RedirectToAction("Login", "Account");
-        }
 
 
-        [HttpGet]
+        [HttpGet("Register")]
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
         }
 
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            //Debugging. 
+            Console.WriteLine("DEBUG: Register method called.");
+
+            //Debugging. 
+            Console.WriteLine("DEBUG: Register method called.");
+
+            //Debugging. 
+            Console.WriteLine($"DEBUG: FirstName = {model.FirstName}");
+            Console.WriteLine($"DEBUG: LastName = {model.LastName}");
+            Console.WriteLine($"DEBUG: Email = {model.Email}");
+            Console.WriteLine($"DEBUG: Major = {model.Major}");
+            Console.WriteLine($"DEBUG: Year = {model.Year}");
+
+            //Debugging. 
+            if (!ModelState.IsValid)
             {
-                var student = new Student
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Email = model.Email,
-                    Password = model.Password, // Use hashed passwords in production
-                    Major = model.Major,
-                    Year = model.Year
-                };
-
-                _context.Students.Add(student);
-                await _context.SaveChangesAsync();
-
-                // Indicate success
-                ViewBag.RegistrationSuccess = true;
-
-                // Render the view to show the modal
-                return View();
+                    Console.WriteLine($"DEBUG: ModelState Error - {error.ErrorMessage}");
+                }
+                return View(model);
             }
 
-            // If ModelState is invalid, return the form with errors
-            return View(model);
+            try
+            {
+                //Debugging. 
+                Console.WriteLine("DEBUG: Calling StudentService.CreateStudent.");
+
+                var newStudent = await _studentService.CreateStudent(
+                    model.FirstName,
+                    model.LastName,
+                    model.Email,
+                    model.Password,
+                    model.Major,
+                    model.Year
+                );
+                //Debugging. 
+                Console.WriteLine($"DEBUG: Student successfully created: {newStudent.FirstName} {newStudent.LastName}");
+
+                TempData["SuccessMessage"] = $"Account for {newStudent.FirstName} {newStudent.LastName} created! Please log in."; //Shows message to user that the creation was successful.
+
+                return RedirectToAction("Login", "Account"); //Routes user back to the login page after successful creation
+            }
+            catch (Exception ex)
+            {
+                //Debugging. 
+                Console.WriteLine($"DEBUG: Exception occurred - {ex.Message}");
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
         }
 
 
+        // Logout
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            TempData["LogoutMessage"] = "You have successfully logged out."; // Logout message
+            HttpContext.Session.Clear();  // Clear the session
+            return RedirectToAction("Login", "Account");
+        }
     }
 }

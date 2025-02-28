@@ -16,6 +16,8 @@ namespace CourseScheduling.ViewModel
         public string SearchCourseName { get; set; }
         public string SearchCourseCode { get; set; }
 
+        public bool HasConflict {  get; set; }
+
 
 
     }

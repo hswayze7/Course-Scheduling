@@ -6,11 +6,11 @@
             <th>Credits</th>
             <th>Time</th>
             <th>Professor</th>
-            <th>Seats Available</th> <!-- New Column for Available Seats -->
+            <th>Seats Available</th> <!-- Available Seats -->
             <th>Action</th>
         </tr>
     </thead>
-    
+
     <tbody>
         @foreach (var course in Model)
         {
@@ -22,11 +22,15 @@
 
             int availableSeats = course.MaxCapacity - course.CurrentEnrollment;
 
+            // Check if the course has a time conflict
+            string timeConflictIndicator = course.HasConflict ? " (Conflict)" : "";
+
+
             <tr id="courseRow-@course.CourseId" style="cursor: pointer;" onclick="showCourseDetails(@course.CourseId)">
                 <td>@course.CourseCode</td>
                 <td>@course.CourseName</td>
                 <td>@course.Credits</td>
-                <td>@course.Time</td>
+                <td>@course.Time<span style="color: red;">@timeConflictIndicator</span></td>
                 <td>@course.Professor</td>
                 <td class="seatsColumn">@availableSeats / @course.MaxCapacity</td>
                 <td>
@@ -50,6 +54,4 @@
             </tr>
         }
     </tbody>
-
-
 </table>
