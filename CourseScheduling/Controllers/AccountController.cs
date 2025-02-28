@@ -116,12 +116,14 @@ namespace CourseScheduling.Controllers
 
 
         // Logout
-        [HttpPost("Logout")]
+        [HttpGet("Logout")]
         public IActionResult Logout()
         {
-            TempData["LogoutMessage"] = "You have successfully logged out."; // Logout message
+            Console.WriteLine("DEBUG: Logout method called");
             HttpContext.Session.Clear();  // Clear the session
-            return RedirectToAction("Login", "Account");
+            TempData["LogoutMessage"] = "You have successfully logged out."; // Logout message
+            //return RedirectToAction("Login", "Account");
+            return Redirect("~/Account/Login");
         }
     }
 }

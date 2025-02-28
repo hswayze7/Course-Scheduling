@@ -12,6 +12,12 @@
     </div>
 }
 
+@if (TempData["LogoutMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["LogoutMessage"]
+    </div>
+}
 
 <div class="container">
     <!-- Create a centered form with Bootstrap's grid and spacing utilities -->

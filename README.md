@@ -30,6 +30,13 @@ Login Page:
 ![login SD](https://github.com/user-attachments/assets/89a1a6fc-2e55-4ffe-9be9-58760a8fa819)
 
 
+
+Logout notification (now working):
+
+![Image](https://github.com/user-attachments/assets/fd4fa06c-cf63-4e3e-9f2f-7c1f1c0a69e5)
+
+
+
 Course Page:
 
 ![coursesSD](https://github.com/user-attachments/assets/1eee3a62-bfd4-4acd-a361-e922808d342b)

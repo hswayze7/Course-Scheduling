@@ -15,18 +15,24 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Course Scheduling</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <!-- Logout Button -->
-                <li class="nav-item">
-                    <a href="javascript:void(0);" onclick="confirmLogout()" class="btn btn-outline-danger">Logout</a>
-                </li>
+                <!-- Logout Button (Hidden on Login Page) -->
+                @if (!(ViewContext.RouteData.Values["controller"]?.ToString() == "Account"
+                && ViewContext.RouteData.Values["action"]?.ToString() == "Login"))
+                {
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" onclick="confirmLogout()" class="btn btn-outline-danger">Logout</a>
+                    </li>
+                }
             </ul>
         </div>
     </nav>
+
 
     <!-- Main Content -->
     <div class="container mt-4">
@@ -45,12 +51,12 @@
     <!-- Logout Confirmation -->
     <script>
         function confirmLogout() {
-            const confirmAction = confirm("Are you sure you want to log out?");
-            if (confirmAction) {
+            if (confirm("Are you sure you want to log out?")) {
                 window.location.href = '@Url.Action("Logout", "Account")';
             }
         }
     </script>
+
 
     <!-- Render Scripts Section -->
     @RenderSection("Scripts", required: false)
