@@ -67,3 +67,15 @@ Description modal added to show more about the classes:
 
 
 ![descofclasses](https://github.com/user-attachments/assets/4a815198-f5a9-4c8f-9f38-eacd6d7e7c31)
+
+
+
+
+The following demonstrates the registration process, showing the registration page, error message from passwords not matching, and the message of an account being successfully created.
+
+![Image](https://github.com/user-attachments/assets/7dc247ff-5ef7-4b58-93e6-1b6aabe92292)
+
+![Image](https://github.com/user-attachments/assets/c4a3ca4d-d854-4e81-ba8d-8822856b90b0)
+
+
+![Image](https://github.com/user-attachments/assets/2c69d2b4-8512-4acb-8f68-119278d3743f)
