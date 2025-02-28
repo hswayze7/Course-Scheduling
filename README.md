@@ -86,3 +86,8 @@ The following demonstrates the registration process, showing the registration pa
 
 
 ![Image](https://github.com/user-attachments/assets/2c69d2b4-8512-4acb-8f68-119278d3743f)
+
+
+Created a 'profile' the the user / student that shows information about classes / in general
+
+![Image](https://github.com/user-attachments/assets/93747244-e532-41b7-bcae-81dc1d6f969a)

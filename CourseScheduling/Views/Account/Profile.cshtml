@@ -1,0 +1,43 @@
+﻿@model CourseScheduling.ViewModel.StudentProfileViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-3">Student Profile</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.FirstName @Model.LastName</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Major:</strong> @Model.Major</p>
+        <p><strong>Year:</strong> @Model.Year</p>
+    </div>
+</div>
+
+<h3 class="mt-4">Enrolled Courses</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Professor</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model.EnrolledCourses)
+        {
+            <tr>
+                <td>@course.CourseCode</td>
+                <td>@course.CourseName</td>
+                <td>@course.Professor</td>
+                <td>@course.Time</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index", "Course")" class="btn btn-primary">Enroll in More Classes</a>

@@ -48,7 +48,7 @@ namespace CourseScheduling.Controllers
             // Set authentication
             HttpContext.Session.SetInt32("StudentId", student.StudentId);
 
-            return RedirectToAction("Search", "Course"); // Redirect to search page
+            return RedirectToAction("Profile", "Account"); // Redirect to profile page
         }
 
 
@@ -124,6 +124,45 @@ namespace CourseScheduling.Controllers
             TempData["LogoutMessage"] = "You have successfully logged out."; // Logout message
             //return RedirectToAction("Login", "Account");
             return Redirect("~/Account/Login");
+        }
+
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            // Get the logged-in student ID from session
+            int? studentId = HttpContext.Session.GetInt32("StudentId");
+            if (studentId == null)
+            {
+                return RedirectToAction("Login"); // Redirect if not logged in
+            }
+
+            // Fetch student info from database
+            var student = _context.Students
+                .Where(s => s.StudentId == studentId)
+                .Select(s => new StudentProfileViewModel
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    Email = s.Email,
+                    Major = s.Major,
+                    Year = s.Year,
+                    EnrolledCourses = _context.Enrollments
+                        .Where(e => e.StudentId == studentId)
+                        .Select(e => new CourseViewModel
+                        {
+                            CourseCode = e.Course.CourseCode,
+                            CourseName = e.Course.CourseName,
+                            Professor = e.Course.Professor,
+                            Time = e.Course.Time
+                        }).ToList()
+                }).FirstOrDefault();
+
+            if (student == null)
+            {
+                return RedirectToAction("Login"); // Redirect if no student found
+            }
+
+            return View(student);
         }
     }
 }

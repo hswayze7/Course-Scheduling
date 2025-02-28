@@ -441,9 +441,9 @@ namespace CourseScheduling.Controllers
             return Ok("Courses imported successfully.");
         }
 */
-        public IActionResult Search()
+      /*  public IActionResult Search()
         {
-            var viewModel = new SearchViewModel
+            var viewModel = new StudentProfileViewModel
             {
                 CourseName = string.Empty,
                 CourseCode = null,
@@ -451,9 +451,9 @@ namespace CourseScheduling.Controllers
             };
 
             return View(viewModel);
-        }
+        }*/
 
-        [HttpGet]
+     /*   [HttpGet]
         public async Task<IActionResult> SearchResults(string CourseName, string CourseCode)
         {
             var query = _context.Courses.AsQueryable();
@@ -470,7 +470,7 @@ namespace CourseScheduling.Controllers
 
             var results = await query.ToListAsync();
 
-            var viewModel = new SearchViewModel
+            var viewModel = new StudentProfileViewModel
             {
                 CourseName = CourseName,
                 CourseCode = CourseCode,
@@ -479,7 +479,7 @@ namespace CourseScheduling.Controllers
 
             return View("Search", viewModel);
         }
-
+*/
         [HttpGet]
         public async Task<IActionResult> GetCourseDetails(int courseId)
         {
