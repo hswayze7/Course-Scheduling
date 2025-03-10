@@ -33,7 +33,26 @@
         @RenderBody()
     </div>
 
-    <footer class="bg-dark text-white text-center p-3 mt-5">
-        &copy; 2025 Course Scheduling App
-    </footer>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+    <!-- Logout Confirmation -->
+    <script>
+        function confirmLogout() {
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = '@Url.Action("Logout", "Account")';
+            }
+        }
+    </script>
+
+
+    <!-- Render Scripts Section -->
+    @RenderSection("Scripts", required: false)
+</body>
 </html>
