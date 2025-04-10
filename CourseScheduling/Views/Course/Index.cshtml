@@ -189,6 +189,196 @@
     });
 </script>
 
+<script>
+    //Function for when the student enrolls into a course. Will also update the calendar object and the enrolled classes table
+    async function enroll(event, courseId) {
+        // Prevent triggering the row click event
+        event.stopPropagation();
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        try {
+            // Enroll in the course
+            const response = await fetch('/Course/Enroll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ courseId: courseId })
+            });
+
+            if (response.ok) {
+                const updatedCourse = await response.json(); // Get updated course information
+                console.log("Enrollment successful");
+
+                // Update the corresponding row in the available courses table
+                updateCourseRow(updatedCourse);
+
+                // Refresh enrolled courses and update calendar
+                await refreshEnrolledCourses();
+                updateCalendar();
+            } else {
+                console.error("Failed to enroll. Response code: " + response.status);
+            }
+        } catch (error) {
+            console.error("Error during enrollment:", error);
+        }
+    }
+
+    function updateCourseRow(updatedCourse) {
+        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+        if (row) {
+            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+
+            // Update the seats column
+            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+
+            // Update the Enroll button
+            const enrollButton = row.querySelector('.enrollButton');
+            if (availableSeats <= 0) {
+                enrollButton.textContent = 'Full';
+                enrollButton.disabled = true;
+                enrollButton.classList.remove('btn-primary');
+                enrollButton.classList.add('btn-secondary');
+            } else {
+                enrollButton.textContent = 'Enrolled';
+                enrollButton.disabled = true;
+                enrollButton.classList.remove('btn-primary');
+                enrollButton.classList.add('btn-success');
+            }
+        }
+    }
+
+
+    //Function to delete a class after being enrolled.
+
+    async function deleteEnrollment(event, enrollmentId) {
+        event.stopPropagation(); // Prevent default row click behavior
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        try {
+            const response = await fetch('/Course/DeleteEnrollment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(enrollmentId)  // Send the enrollmentId in the body
+            });
+
+            if (response.ok) {
+                const updatedCourse = await response.json(); // Get the updated course information
+                console.log("Enrollment deleted successfully.");
+
+                // Update the course row in the available courses table
+                updateCourseRowOnDelete(updatedCourse);
+
+                // Remove the deleted course from the enrolled courses table
+                document.getElementById(`enrolledRow-${enrollmentId}`).remove();
+
+                // Update the calendar view
+                updateCalendar();
+
+                // Update the total credits the student is enrolled in
+                await updateTotalCredits();
+            } else {
+                console.error("Failed to delete enrollment. Status:", response.status);
+            }
+        } catch (error) {
+            console.error("Error during deletion:", error);
+        }
+    }
+
+    // Function to update the available courses table row after deleting an enrollment
+    function updateCourseRowOnDelete(updatedCourse) {
+        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+        if (row) {
+            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+
+            // Update the seats column
+            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+
+            // Update the Enroll button
+            const enrollButton = row.querySelector('.enrollButton');
+            if (availableSeats > 0) {
+                enrollButton.textContent = 'Enroll';
+                enrollButton.disabled = false;
+                enrollButton.classList.remove('btn-secondary', 'btn-success');
+                enrollButton.classList.add('btn-primary');
+            }
+        }
+    }
+
+
+
+    //Refresh the enroll table and calendar object when deleting / enrolling in classes.
+    async function refreshEnrolledCourses() {
+        try {
+            const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable');
+            if (enrolledCoursesResponse.ok) {
+                const html = await enrolledCoursesResponse.text();
+                document.getElementById("enrolledCourses").innerHTML = html;
+                await updateTotalCredits();  // Update total credits after refreshing enrolled courses
+            } else {
+                console.error("Failed to fetch enrolled courses table.");
+            }
+        } catch (error) {
+            console.error("Error fetching enrolled courses:", error);
+        }
+    }
+
+
+
+    //Function to update the total number of credit hours a student is enrolled in after enrolling in another course
+    async function updateTotalCredits() {
+        try {
+            const response = await fetch('/Course/GetTotalCredits');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("totalCredits").innerText = data.totalCredits;
+            } else {
+                console.error("Failed to update total credits. Response code: " + response.status);
+            }
+        } catch (error) {
+            console.error("Error updating total credits:", error);
+        }
+    }
+
+    //Creatation of calendar object
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            events: async function (fetchInfo, successCallback, failureCallback) {
+                try {
+                    let response = await fetch('/Course/GetEnrolledCourses');
+                    if (response.ok) {
+                        let events = await response.json();
+                        successCallback(events);
+                    }
+                } catch (error) {
+                    console.error("Error fetching events:", error);
+                }
+            },
+            eventColor: '#378006'
+        });
+
+        calendar.render();
+        window.updateCalendar = function () {
+            calendar.refetchEvents();
+        };
+    });
+
+
+</script>
+
 
 <script>
     // Function to fetch and display course details in the modal
