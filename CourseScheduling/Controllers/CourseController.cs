@@ -100,7 +100,7 @@ namespace CourseScheduling.Controllers
                 RecommendedCourses = recommendedCourses
             };
 
-            return View(viewModel); // ✅ must pass the viewModel here
+            return View(viewModel); 
         }
 
         private static string GetCoursePrefixFromMajor(string major)
