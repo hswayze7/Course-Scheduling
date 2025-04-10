@@ -17,6 +17,8 @@
 
         public DbSet<Waitlist> Waitlists { get; set; }
 
+        public DbSet<DegreeRequirement> DegreeRequirements { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -87,6 +89,15 @@
 
             );
 
+            modelBuilder.Entity<DegreeRequirement>().HasData(
+                 new DegreeRequirement { Id = 1, Major = "Computer Science", CourseId = 1, IsRequired = true, SemesterSuggestion = 1 }, // CS101
+                new DegreeRequirement { Id = 2, Major = "Computer Science", CourseId = 3, IsRequired = true, SemesterSuggestion = 2 }, // CS400
+                new DegreeRequirement { Id = 3, Major = "Computer Science", CourseId = 4, IsRequired = true, SemesterSuggestion = 3 }, // CS510
+                 new DegreeRequirement { Id = 4, Major = "Computer Science", CourseId = 25, IsRequired = true, SemesterSuggestion = 4 }, // CS311
+                new DegreeRequirement { Id = 5, Major = "Computer Science", CourseId = 30, IsRequired = true, SemesterSuggestion = 5 }  // CS540
+    
+            );
+
             modelBuilder.Entity<Student>().HasData(
                new Student
                {
@@ -131,6 +142,8 @@
                 .WithMany()
                 .HasForeignKey(w => w.StudentId);
         }
+
+
       
 
     }
