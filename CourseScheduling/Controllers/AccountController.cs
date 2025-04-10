@@ -1,12 +1,12 @@
-﻿using CourseScheduling.Models;
+using CourseScheduling.Models;
 using Microsoft.AspNetCore.Mvc;
 using CourseScheduling.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CourseScheduling.Controllers
 {
-    //Controller to handle that user login.
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,67 +16,57 @@ namespace CourseScheduling.Controllers
             _context = context;
         }
 
-        // Display the login form
+        // GET: /Account/Login
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // Handle login logic
+        // POST: /Account/Login
         [HttpPost]
         public IActionResult Login(StudentLoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Check if the student exists in the database
                 if (model == null)
                 {
                     return BadRequest("Model cannot be null.");
                 }
-
-                Console.WriteLine($"StudentId: {model.StudentId}, Password: {model.Password}");
 
                 var student = _context.Students
                     .FirstOrDefault(s => s.StudentId == model.StudentId && s.Password == model.Password);
 
                 if (student == null)
                 {
-                    return Unauthorized("Invalid student ID or password.");
+                    ModelState.AddModelError("", "Invalid student ID or password.");
+                    return View(model);
                 }
 
-                if (student != null)
-                {
-                    // Set authentication
-                    HttpContext.Session.SetInt32("StudentId", student.StudentId);
-                    //return RedirectToAction("Index", "Course");  // Redirect to the course page
-                    return RedirectToAction("Search", "Course"); //Goes to the search page
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid student ID or password.");
-                }
+                HttpContext.Session.SetInt32("StudentId", student.StudentId);
+                return RedirectToAction("Search", "Course");
             }
 
             return View(model);
         }
 
-        // Logout 
         public IActionResult Logout()
         {
-            TempData["LogoutMessage"] = "You have successfully logged out."; //Displays a message after logging out stating that the action was successful
-            HttpContext.Session.Clear();  // Clear the session
+            TempData["LogoutMessage"] = "You have successfully logged out.";
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Account");
         }
 
-
+        // GET: /Account/Register
         [HttpGet]
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
         }
 
+        // POST: /Account/Register
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -86,7 +76,7 @@ namespace CourseScheduling.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    Password = model.Password, // Use hashed passwords in production
+                    Password = model.Password, // 🔒 Consider hashing for production
                     Major = model.Major,
                     Year = model.Year
                 };
@@ -94,17 +84,12 @@ namespace CourseScheduling.Controllers
                 _context.Students.Add(student);
                 await _context.SaveChangesAsync();
 
-                // Indicate success
-                ViewBag.RegistrationSuccess = true;
-
-                // Render the view to show the modal
-                return View();
+                // TempData carries info across redirect
+                TempData["SuccessMessage"] = $"Registration successful! Your Student ID is: {student.StudentId}";
+                return RedirectToAction("Register");
             }
 
-            // If ModelState is invalid, return the form with errors
             return View(model);
         }
-
-
     }
 }
