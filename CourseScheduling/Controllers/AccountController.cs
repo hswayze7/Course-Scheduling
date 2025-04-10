@@ -1,4 +1,4 @@
-﻿using CourseScheduling.Models;
+using CourseScheduling.Models;
 using Microsoft.AspNetCore.Mvc;
 using CourseScheduling.ViewModel;
 using Microsoft.AspNetCore.Http;
@@ -29,12 +29,14 @@ namespace CourseScheduling.Controllers
             return View();
         }
 
+
         // Handle login logic
         [HttpPost("Login")]
         public IActionResult Login(StudentLoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
+
                 return View(model);
             }
 
@@ -51,6 +53,7 @@ namespace CourseScheduling.Controllers
 
             return RedirectToAction("Profile", "Account"); // Redirect to profile page
         }
+
 
 
 
@@ -78,6 +81,7 @@ namespace CourseScheduling.Controllers
                 // Debugging: Output the errors if validation fails
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
+
                     Console.WriteLine($"DEBUG: ModelState Error - {error.ErrorMessage}");
                 }
                 return View(model);
