@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CourseScheduling.Services;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseScheduling.Controllers
 {
@@ -62,22 +63,19 @@ namespace CourseScheduling.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            //Debugging. 
-            Console.WriteLine("DEBUG: Register method called.");
+            // Debugging: Check if email already exists in the database
+            var existingStudent = _context.Students.FirstOrDefault(s => s.Email == model.Email);
+            if (existingStudent != null)
+            {
+                // Add error to the ModelState if email is already taken
+                ModelState.AddModelError("Email", "This email is already registered. Try a different email.");
+                Console.WriteLine("DEBUG: Email already exists.");
+                return View(model); // Return the view with the error message
+            }
 
-            //Debugging. 
-            Console.WriteLine("DEBUG: Register method called.");
-
-            //Debugging. 
-            Console.WriteLine($"DEBUG: FirstName = {model.FirstName}");
-            Console.WriteLine($"DEBUG: LastName = {model.LastName}");
-            Console.WriteLine($"DEBUG: Email = {model.Email}");
-            Console.WriteLine($"DEBUG: Major = {model.Major}");
-            Console.WriteLine($"DEBUG: Year = {model.Year}");
-
-            //Debugging. 
             if (!ModelState.IsValid)
             {
+                // Debugging: Output the errors if validation fails
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Console.WriteLine($"DEBUG: ModelState Error - {error.ErrorMessage}");
@@ -87,9 +85,7 @@ namespace CourseScheduling.Controllers
 
             try
             {
-                //Debugging. 
-                Console.WriteLine("DEBUG: Calling StudentService.CreateStudent.");
-
+                // Proceed with registration
                 var newStudent = await _studentService.CreateStudent(
                     model.FirstName,
                     model.LastName,
@@ -98,21 +94,17 @@ namespace CourseScheduling.Controllers
                     model.Major,
                     model.Year
                 );
-                //Debugging. 
-                Console.WriteLine($"DEBUG: Student successfully created: {newStudent.FirstName} {newStudent.LastName}");
 
-                TempData["SuccessMessage"] = $"Account for {newStudent.FirstName} {newStudent.LastName} created! Please log in."; //Shows message to user that the creation was successful.
-
-                return RedirectToAction("Login", "Account"); //Routes user back to the login page after successful creation
+                TempData["SuccessMessage"] = $"Account for {newStudent.FirstName} {newStudent.LastName} created! Please log in.";
+                return RedirectToAction("Login", "Account"); // Redirect to login page
             }
             catch (Exception ex)
             {
-                //Debugging. 
-                Console.WriteLine($"DEBUG: Exception occurred - {ex.Message}");
                 ModelState.AddModelError("", ex.Message);
                 return View(model);
             }
         }
+
 
 
         // Logout

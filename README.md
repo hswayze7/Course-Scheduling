@@ -96,3 +96,8 @@ Created a 'profile' the the user / student that shows information about classes 
 Recommendation Table based on user's major.
 
 ![Image](https://github.com/user-attachments/assets/257b70c4-0504-48f7-bb77-336f0d735068)
+
+
+Validation of email address when user signs up.
+
+![Image](https://github.com/user-attachments/assets/116fceb4-d9d2-4657-b632-a4d8638b4921)

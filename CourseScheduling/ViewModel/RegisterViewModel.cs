@@ -6,30 +6,37 @@ namespace CourseScheduling.ViewModel
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "First name is required")]
-        public  string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Last name is required")]
-        public  string LastName { get; set; }
-
-
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        public  string Email { get; set; }
+        [EmailAddress(ErrorMessage = "Invalid Email Address")] // Ensures a valid email format
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required]
+        [StringLength(100, MinimumLength = 6)]
         [DataType(DataType.Password)]
-        public  string Password { get; set; }
-        [Required(ErrorMessage = "Your year is required")]
-        public  string Year { get; set; }
-        [Required(ErrorMessage = "Major is required")]
-        public  string Major { get; set; }
-        [Required(ErrorMessage = "Confirm password is required")]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        public string? ConfirmPassword { get; set; }
+        [Display(Name = "Password")]
+        public string Password { get; set; }
 
-       // public Student Student { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Major")]
+        public string Major { get; set; }
+
+        [Required]
+        [Display(Name = "Year")]
+        public string Year { get; set; }
     }
 
 
