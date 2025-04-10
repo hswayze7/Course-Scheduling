@@ -4,6 +4,7 @@ using CourseScheduling.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228014536_UpdateCap")]
+    partial class UpdateCap
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,9 +109,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "CS510",
                             CourseName = "Programming Language Concepts",
                             Credits = 3,
-                            CurrentEnrollment = 15,
+                            CurrentEnrollment = 40,
                             Description = "Theoretical concepts in the design and use of programming languages. Formal syntax, including Backus Normal Form (BNF), Extended Backus-Naur Form (EBNF), and syntax diagrams. Semantics, including declaration, allocation and evaluation, symbol table and runtime environment; data types and type checking, procedure activation and parameter passing, modules and abstract data types.",
-                            MaxCapacity = 40,
+                            MaxCapacity = 15,
                             Professor = "Prof13",
                             Time = "T/TR 8:30 AM - 9:50 AM"
                         },
@@ -130,9 +133,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "PSY325",
                             CourseName = "Developmental Psychology",
                             Credits = 3,
-                            CurrentEnrollment = 25,
+                            CurrentEnrollment = 50,
                             Description = "Studies systems of formal logic including sentential and predicate logic. Emphasizes the uses of these systems in the analysis of arguments.",
-                            MaxCapacity = 50,
+                            MaxCapacity = 25,
                             Professor = "Prof5",
                             Time = "M/T/F 12:30 PM - 1:45 PM"
                         },
@@ -574,9 +577,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC201",
                             CourseName = "Introductory Design Project",
                             Credits = 1,
-                            CurrentEnrollment = 2,
+                            CurrentEnrollment = 30,
                             Description = "The first of the three-course project design series. The course introduces students to project design, prototyping, engineering standards and professional reports. Students are part of teams, learn prototyping skills and have hands on experiences in a maker-space. Students learn project management tools, team working tools, how to perform market research and develop videos, and prototype development. Prerequisite(s): FYET 102A, FYET 102B, ENGR 302, ID 300 or instructor's consent.",
-                            MaxCapacity = 30,
+                            MaxCapacity = 2,
                             Professor = "Prof44",
                             Time = "M/W/F 4:15 PM - 5:45 PM"
                         },
@@ -600,7 +603,7 @@ namespace CourseScheduling.Migrations
                             Credits = 2,
                             CurrentEnrollment = 30,
                             Description = "Second course in four-course project sequence. Introduces students to engineering design concepts with an entrepreneurial mindset. This includes customer discovery and value creation techniques as well as engineering design and project management tools. Prerequisite(s): AC 201 or ENGR 205 or instructor's consent.",
-                            MaxCapacity = 50,
+                            MaxCapacity = 18,
                             Professor = "Prof46",
                             Time = "M/W/F 1:45 PM - 3:15 PM"
                         },
@@ -610,9 +613,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC321",
                             CourseName = "Applied Networking",
                             Credits = 3,
-                            CurrentEnrollment = 22,
+                            CurrentEnrollment = 30,
                             Description = "Information technology (IT) virtually connects people and businesses in the world. The daily operations of every organization in the public and private sector heavily rely on the internet. This course allows students to gain vital concepts on computer networking and security to solve real-world computing challenges. This course is a key for anyone who wants to gain advanced skills in the computing sector. Students collaborate effectively and think critically to develop skills in computer networking. Students learn to use industry-standard tools through hands-on class projects.",
-                            MaxCapacity = 30,
+                            MaxCapacity = 22,
                             Professor = "Prof47",
                             Time = "M/W/F 3:45 PM - 5:15 PM"
                         },
@@ -706,9 +709,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC461",
                             CourseName = "Digital Forensics",
                             Credits = 3,
-                            CurrentEnrollment = 20,
+                            CurrentEnrollment = 30,
                             Description = "Covers concepts related to hardware and software forensics, incident response, cyber crime and cyber law enforcement. Students learn different aspects of computer and cyber crime and ways to uncover, protect, exploit and document digital evidence. Students are exposed to different types of tools (both software and hardware), techniques and procedures, and are able to use them to perform rudimentary forensic investigations. Focuses on the entire life cycle of incident response including preparation, data collection, data analysis and remediation. Real world case studies reveal the methods behind and remediation strategies for today's most insidious attacks. Prerequisite(s): AC 326 .",
-                            MaxCapacity = 30,
+                            MaxCapacity = 20,
                             Professor = "Prof55",
                             Time = "M/W/F 9:30 AM - 11:15 AM"
                         },
@@ -762,76 +765,6 @@ namespace CourseScheduling.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Major")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SemesterSuggestion")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("DegreeRequirements");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 3,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 4,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CourseId = 25,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CourseId = 30,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 5
-                        });
-                });
-
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>
                 {
                     b.Property<int>("EnrollmentId")
@@ -862,7 +795,7 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2025, 4, 10, 9, 4, 15, 500, DateTimeKind.Local).AddTicks(4293),
+                            EnrollmentDate = new DateTime(2025, 2, 27, 19, 45, 35, 880, DateTimeKind.Local).AddTicks(7934),
                             StudentId = 1
                         });
                 });
@@ -966,17 +899,6 @@ namespace CourseScheduling.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Waitlists");
-                });
-
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.HasOne("CourseScheduling.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>

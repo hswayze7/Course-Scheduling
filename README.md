@@ -30,6 +30,13 @@ Login Page:
 ![login SD](https://github.com/user-attachments/assets/89a1a6fc-2e55-4ffe-9be9-58760a8fa819)
 
 
+
+Logout notification (now working):
+
+![Image](https://github.com/user-attachments/assets/fd4fa06c-cf63-4e3e-9f2f-7c1f1c0a69e5)
+
+
+
 Course Page:
 
 ![coursesSD](https://github.com/user-attachments/assets/1eee3a62-bfd4-4acd-a361-e922808d342b)
@@ -67,3 +74,30 @@ Description modal added to show more about the classes:
 
 
 ![descofclasses](https://github.com/user-attachments/assets/4a815198-f5a9-4c8f-9f38-eacd6d7e7c31)
+
+
+
+
+The following demonstrates the registration process, showing the registration page, error message from passwords not matching, and the message of an account being successfully created.
+
+![Image](https://github.com/user-attachments/assets/7dc247ff-5ef7-4b58-93e6-1b6aabe92292)
+
+![Image](https://github.com/user-attachments/assets/c4a3ca4d-d854-4e81-ba8d-8822856b90b0)
+
+
+![Image](https://github.com/user-attachments/assets/2c69d2b4-8512-4acb-8f68-119278d3743f)
+
+
+Created a 'profile' the the user / student that shows information about classes / in general
+
+![Image](https://github.com/user-attachments/assets/93747244-e532-41b7-bcae-81dc1d6f969a)
+
+
+Recommendation Table based on user's major.
+
+![Image](https://github.com/user-attachments/assets/257b70c4-0504-48f7-bb77-336f0d735068)
+
+
+Validation of email address when user signs up.
+
+![Image](https://github.com/user-attachments/assets/116fceb4-d9d2-4657-b632-a4d8638b4921)

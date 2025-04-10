@@ -6,8 +6,12 @@
 }
 
 @Html.AntiForgeryToken()
-
-<div class="container mt-5">
+<a asp-controller="Course" asp-action="RecommendedCourses" asp-route-studentId="@Model.StudentId">
+    See Recommended Courses
+</a>
+<p>Your major: @ViewBag.Major</p>
+<!-- Main Content Section -->
+<div class="container-fluid">
     <!-- Available Courses Section -->
     <div class="row mb-4">
         <div class="col-12">
@@ -26,31 +30,99 @@
                     </div>
                 </div>
             </form>
-            <div id="availableCoursesTable" class="table-responsive">
-                @await Html.PartialAsync("_AvailableCoursesTable", Model.AvailableCourses)
+            <div id="availableCoursesTable" class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                @await Html.PartialAsync("_AvailableCoursesTable", Model)
             </div>
         </div>
     </div>
 
-    <!-- Enrolled Courses Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="text-primary">Your Enrolled Courses</h2>
-            <h4>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h4>
-            <div id="enrolledCourses" class="table-responsive">
-                @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+    <!-- Schedule & Enrolled Courses Section -->
+    <div class="container-fluid">
+        <!-- Schedule & Enrolled Courses Section -->
+        <div class="row mb-4">
+            <!-- Enrolled Courses Section -->
+            <div class="col-12">
+                <h2 class="text-primary">Your Enrolled Courses</h2>
+                <h4>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h4>
+                <div id="enrolledCourses" class="table-container">
+                    @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
+                </div>
+            </div>
+        </div>
+            <!-- Calendar Section -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-primary">Class Schedule</h2>
+                <div id="calendar" class="calendar-container"></div>
             </div>
         </div>
     </div>
 
-    <!-- Calendar Section -->
-    <div class="row">
-        <div class="col-12">
-            <h2 class="text-primary">Class Schedule</h2>
-            <div id="calendar" class="calendar-container"></div>
-        </div>
-    </div>
 </div>
+
+<!-- Recommended Courses Section -->
+@if (Model.RecommendedCourses != null && Model.RecommendedCourses.Any())
+{
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2 class="text-primary">Recommended Courses Based on Your Major</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Credits</th>
+                            <th>Time</th>
+                            <th>Professor</th>
+                            <th>Seats Available</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in Model.RecommendedCourses)
+                        {
+                            var enrolledCourses = ViewBag.EnrolledCourses as List<CourseScheduling.Models.Enrollment>;
+                            var waitlistedCourses = ViewBag.WaitlistedCourses as List<CourseScheduling.Models.Waitlist>;
+
+                            bool isEnrolled = enrolledCourses != null && enrolledCourses.Any(e => e.CourseId == course.CourseId);
+                            bool isWaitlisted = waitlistedCourses != null && waitlistedCourses.Any(w => w.CourseId == course.CourseId);
+                            int availableSeats = course.MaxCapacity - course.CurrentEnrollment;
+                            string timeConflictIndicator = course.HasConflict ? " (Conflict)" : "";
+
+                            <tr style="cursor: pointer;" onclick="showCourseDetails(@course.CourseId)">
+                                <td>@course.CourseCode</td>
+                                <td>@course.CourseName</td>
+                                <td>@course.Credits</td>
+                                <td>@course.Time<span class="text-danger">@timeConflictIndicator</span></td>
+                                <td>@course.Professor</td>
+                                <td>@availableSeats / @course.MaxCapacity</td>
+                                <td>
+                                    @if (isEnrolled)
+                                    {
+                                        <button type="button" class="btn btn-success btn-sm enrollButton" onclick="event.stopPropagation(); deleteEnrollment(event, @enrolledCourses.First(e => e.CourseId == course.CourseId).EnrollmentId)">Enrolled</button>
+                                    }
+                                    else if (isWaitlisted)
+                                    {
+                                        <button type="button" class="btn btn-warning btn-sm" disabled>Waitlisted</button>
+                                    }
+                                    else if (availableSeats <= 0)
+                                    {
+                                        <button type="button" class="btn btn-secondary btn-sm" disabled>Full</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm enrollButton" onclick="enroll(event, @course.CourseId)">Enroll</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
 
 <!-- Modal for Course Details -->
 <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
@@ -117,68 +189,101 @@
     });
 </script>
 
+
+<script>
+    // Function to fetch and display course details in the modal
+    async function showCourseDetails(courseId) {
+        try {
+            const response = await fetch(`/Course/GetCourseDetails?courseId=${courseId}`);
+            if (response.ok) {
+                const data = await response.json();
+
+                // Populate modal content
+                document.getElementById("courseCode").textContent = data.courseCode;
+                document.getElementById("courseName").textContent = data.courseName;
+                document.getElementById("courseCredits").textContent = data.credits;
+                document.getElementById("courseTime").textContent = data.time;
+                document.getElementById("courseProfessor").textContent = data.professor;
+                document.getElementById("courseDescription").textContent = data.description;
+
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
+                modal.show();
+            } else {
+                console.error("Failed to fetch course details. Response code:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching course details:", error);
+        }
+    }
+
+    // Ensure Bootstrap modal is initialized globally (optional for debugging)
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('courseDetailsModal');
+        const modal = new bootstrap.Modal(modalElement);
+
+        // Optionally expose modal to global scope for debugging
+        window.courseDetailsModal = modal;
+    });
+</script>
+
 <style>
-/* Table and Calendar Styling */
-.table-container, .calendar-container {
+/* Enrolled Courses Section */
+.table-container {
+    width: 100%; /* Ensure the table spans the full width */
+    max-width: 100%; /* Prevent overflow issues */
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 15px;
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.calendar-container {
-    height: 600px;
-}
-</style>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>@ViewData["Title"] - Course Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body style="background: linear-gradient(to right, #e0c3fc, #8ec5fc);">
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">Scheduler</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Home/About">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Home/Contact">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-2" href="/Account/Login">Login</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container py-5">
-        @RenderBody()
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
-
-@section Scripts {
-    <script>
-        // Your full JavaScript here...
-    </script>
+    height: auto; /* Allow height to adjust dynamically */
+    overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
 }
 
-@section Styles {
-    <style>
-        /* Your styles here */
-    </style>
+    .calendar-container {
+        width: 100%; /* Full width */
+        max-width: 100%; /* Prevent unnecessary shrinking */
+        height: 700px; /* Slightly increased height for better visibility */
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Prevent content overflow */
+    }
+
+/* Container and Row Styling */
+.container-fluid {
+    padding: 10px; /* Minimize container padding for more usable space */
+        max-width: 100%;
 }
+
+.row {
+    margin: 0; /* Remove row margins to eliminate unnecessary spacing */
+    gap: 0; /* Remove gaps between sections */
+}
+
+/* Responsive Adjustments */
+@@media (min-width: 1200px) {
+    .table-container {
+        margin: 0 auto; /* Center the table horizontally */
+    }
+}
+
+@@media (max-width: 768px) {
+    .table-container {
+        width: 100%; /* Ensure the table takes full width on smaller screens */
+        overflow-x: scroll; /* Allow scrolling for narrow screens */
+    }
+}
+
+</style >
+
+
+
+
 
 
 

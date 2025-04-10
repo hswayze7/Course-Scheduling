@@ -46,21 +46,116 @@ namespace CourseScheduling.Controllers
             // Fetch the student's waitlisted courses
             var waitlistedCourses = await _context.Waitlists
                 .Where(w => w.StudentId == studentId)
+                .Include (w => w.Course)
                 .Select(w => w.Course)
                 .ToListAsync();
+
+            // Check for time conflicts
+            foreach (var course in availableCourses)
+            {
+                course.HasConflict = enrolledCourses.Any(enrolled =>
+                    HasTimeConflict(enrolled.Course.Time, course.Time));
+            }
+
 
             // Pass the data to the view using ViewBag or ViewModel
             ViewBag.EnrolledCourses = enrolledCourses;
             ViewBag.WaitlistedCourses = waitlistedCourses;
 
+            var student = await _context.Students.FindAsync(studentId);
+            var majorPrefix = GetCoursePrefixFromMajor(student.Major ?? "");
+            var recommendedCourses = await _context.Courses
+                .Where(c => c.CourseCode.StartsWith(majorPrefix))
+                .ToListAsync();
+
             // Prepare the view model
             var viewModel = new CourseEnrollmentViewModel
             {
+                StudentId = studentId.Value,
                 AvailableCourses = availableCourses,
-                EnrolledCourses = enrolledCourses
+                EnrolledCourses = enrolledCourses,
+                RecommendedCourses = recommendedCourses
             };
 
             return View(viewModel);
+        }
+        //Recommended courses based on CourseID
+        public async Task<IActionResult> RecommendedCourses(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var majorPrefix = GetCoursePrefixFromMajor(student.Major ?? "");
+
+            var recommendedCourses = await _context.Courses
+                .Where(c => c.CourseCode.StartsWith(majorPrefix))
+                .ToListAsync();
+
+            var viewModel = new RecommendationViewModel
+            {
+                Major = student.Major,
+                RecommendedCourses = recommendedCourses
+            };
+
+            return View(viewModel); // ✅ must pass the viewModel here
+        }
+
+        private static string GetCoursePrefixFromMajor(string major)
+        {
+            return major switch
+            {
+                "Computer Science" => "CS",
+                "Business" => "BUS",
+                "Mathematics" => "MATH",
+                "Biology" => "BIO",
+                _ => "" // Default fallback
+            };
+        }
+
+
+        private bool HasTimeConflict(string time1, string time2)
+        {
+            try
+            {
+                var days1 = ExtractDays(time1);
+                var timeRange1 = ExtractTimeRange(time1);
+
+                var days2 = ExtractDays(time2);
+                var timeRange2 = ExtractTimeRange(time2);
+
+                // Check if any day overlaps
+                if (days1.Intersect(days2).Any())
+                {
+                    // Check if the time ranges overlap
+                    return timeRange1.start < timeRange2.end && timeRange1.end > timeRange2.start;
+                }
+            }
+            catch
+            {
+               
+            }
+
+            return false;
+        }
+
+        // Helper method to extract days (e.g., "M/W/F")
+        private List<string> ExtractDays(string timeString)
+        {
+            var parts = timeString.Split(' ', 2); // Split days and time range
+            return parts[0].Split('/').Select(d => d.Trim()).ToList();
+        }
+
+        // Helper method to extract start and end times
+        private (TimeSpan start, TimeSpan end) ExtractTimeRange(string timeString)
+        {
+            var parts = timeString.Split(' ', 2); // Split days and time range
+            var timeRange = parts[1].Split('-').Select(t => t.Trim()).ToArray();
+            var start = DateTime.ParseExact(timeRange[0], "h:mm tt", null).TimeOfDay;
+            var end = DateTime.ParseExact(timeRange[1], "h:mm tt", null).TimeOfDay;
+            return (start, end);
         }
 
 
@@ -146,10 +241,6 @@ namespace CourseScheduling.Controllers
 
             return View("Index", viewModel); // Use Index.cshtml to display courses
         }
-
-
-
-
 
         // Enroll in a course
         [HttpPost]
@@ -394,9 +485,9 @@ namespace CourseScheduling.Controllers
             return Ok("Courses imported successfully.");
         }
 */
-        public IActionResult Search()
+      /*  public IActionResult Search()
         {
-            var viewModel = new SearchViewModel
+            var viewModel = new StudentProfileViewModel
             {
                 CourseName = string.Empty,
                 CourseCode = null,
@@ -404,9 +495,9 @@ namespace CourseScheduling.Controllers
             };
 
             return View(viewModel);
-        }
+        }*/
 
-        [HttpGet]
+     /*   [HttpGet]
         public async Task<IActionResult> SearchResults(string CourseName, string CourseCode)
         {
             var query = _context.Courses.AsQueryable();
@@ -423,7 +514,7 @@ namespace CourseScheduling.Controllers
 
             var results = await query.ToListAsync();
 
-            var viewModel = new SearchViewModel
+            var viewModel = new StudentProfileViewModel
             {
                 CourseName = CourseName,
                 CourseCode = CourseCode,
@@ -432,7 +523,7 @@ namespace CourseScheduling.Controllers
 
             return View("Search", viewModel);
         }
-
+*/
         [HttpGet]
         public async Task<IActionResult> GetCourseDetails(int courseId)
         {

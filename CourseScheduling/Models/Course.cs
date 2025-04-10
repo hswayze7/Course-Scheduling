@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseScheduling.Models
 {
@@ -26,5 +27,9 @@ namespace CourseScheduling.Models
 
         public ICollection<Enrollment> Enrollments { get; set; }
         public string Description { get;  set; }
+
+
+        [NotMapped]
+        public bool HasConflict { get; set; } // New property to indicate conflicts
     }
 }

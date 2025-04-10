@@ -4,6 +4,7 @@ using CourseScheduling.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228015030_AnotherCapUpdate")]
+    partial class AnotherCapUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -762,76 +765,6 @@ namespace CourseScheduling.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Major")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SemesterSuggestion")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("DegreeRequirements");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 3,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 4,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CourseId = 25,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CourseId = 30,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 5
-                        });
-                });
-
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>
                 {
                     b.Property<int>("EnrollmentId")
@@ -862,7 +795,7 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2025, 4, 10, 9, 4, 15, 500, DateTimeKind.Local).AddTicks(4293),
+                            EnrollmentDate = new DateTime(2025, 2, 27, 19, 50, 29, 541, DateTimeKind.Local).AddTicks(867),
                             StudentId = 1
                         });
                 });
@@ -966,17 +899,6 @@ namespace CourseScheduling.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Waitlists");
-                });
-
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.HasOne("CourseScheduling.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>

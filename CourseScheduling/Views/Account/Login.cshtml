@@ -5,9 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successMessage" class="alert alert-success">
+        <strong>@TempData["SuccessMessage"]</strong>
+    </div>
+}
+
 @if (TempData["LogoutMessage"] != null)
 {
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success">
         @TempData["LogoutMessage"]
     </div>
 }
@@ -39,3 +46,10 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        setTimeout(function () {
+            $('#successMessage').fadeOut('slow');
+        }, 5000);
+    </script>
+}

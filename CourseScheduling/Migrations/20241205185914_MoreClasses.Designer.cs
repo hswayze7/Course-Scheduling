@@ -4,6 +4,7 @@ using CourseScheduling.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205185914_MoreClasses")]
+    partial class MoreClasses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -487,348 +490,14 @@ namespace CourseScheduling.Migrations
                         new
                         {
                             CourseId = 36,
-                            CourseCode = "PSY111",
-                            CourseName = "General Psychology",
-                            Credits = 3,
-                            CurrentEnrollment = 45,
-                            Description = "General education social and behavioral sciences course. Introduces the general principles and areas of psychology. Includes learning, perceiving, thinking, behavioral development, intelligence, personality and abnormalities of behavior. Course is a prerequisite for advanced and specialized courses in psychology. This is a Kansas Systemwide Transfer Course.",
-                            MaxCapacity = 50,
-                            Professor = "Prof37",
-                            Time = "M/W/F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 37,
-                            CourseCode = "ECON201",
-                            CourseName = "Principles of Macroeconomics",
+                            CourseCode = "MATH511",
+                            CourseName = "Linear Algebra",
                             Credits = 3,
                             CurrentEnrollment = 30,
-                            Description = "General education social and behavioral sciences course. Introduces economic concepts of scarcity, markets and prices. Emphasizes business cycles, recessions and recoveries, unemployment, inflation, monetary and fiscal policy. Discusses money and the banking system, the Federal Reserve, and trade and the impact of the global economy. This is a Kansas Systemwide Transfer Course.",
-                            MaxCapacity = 45,
-                            Professor = "Prof38",
-                            Time = "T/TR 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 38,
-                            CourseCode = "MATH123",
-                            CourseName = "College Trigonometry",
-                            Credits = 3,
-                            CurrentEnrollment = 4,
-                            Description = "Studies the trigonometric functions and their applications. Credit in both MATH 123 and 112 is not allowed. This is a Kansas Systemwide Transfer Course. Prerequisite(s): MATH 111 with C or better or equivalent high school preparation and one unit of high school geometry.",
-                            MaxCapacity = 30,
-                            Professor = "Prof39",
-                            Time = "M/W/F 12:30 PM - 1:55 PM"
-                        },
-                        new
-                        {
-                            CourseId = 39,
-                            CourseCode = "PSY323",
-                            CourseName = "Social Psychology",
-                            Credits = 3,
-                            CurrentEnrollment = 8,
-                            Description = "General education social and behavioral sciences course. Studies perception of self, others and groups. Includes attitude formation and change, group processes like conformity, compliance and conflict, and interpersonal processes such as attraction and the formation of close relationships. Also includes the application of social psychological principles to the study of prosocial and aggressive behavior. Prerequisite(s): PSY 111.",
-                            MaxCapacity = 30,
-                            Professor = "Prof40",
-                            Time = "M/W/F 9:30 AM - 10:45 AM"
-                        },
-                        new
-                        {
-                            CourseId = 40,
-                            CourseCode = "PSY405",
-                            CourseName = "Human Factors Psychology",
-                            Credits = 3,
-                            CurrentEnrollment = 30,
-                            Description = "The study of how people respond to the demands of complex machines and the varied environments of workplace, home and other settings. Introduces the tools and methods of machine, task and environment design to achieve the matching of human capabilities and the demands of machines and environments so as to enhance human performance and well being. Prerequisite(s): PSY 111.",
-                            MaxCapacity = 45,
-                            Professor = "Prof41",
-                            Time = "T/TH 9:45 AM - 11:00 AM"
-                        },
-                        new
-                        {
-                            CourseId = 41,
-                            CourseCode = "STAT370",
-                            CourseName = "Elementary Statistics",
-                            Credits = 3,
-                            CurrentEnrollment = 17,
-                            Description = "General education math and natural sciences course. Surveys elementary descriptive statistics, binomial and normal distributions, elementary problems of statistical inference, linear correlation and regression. Not open to mathematics majors. Students cannot receive credit for both STAT 171 and STAT 370. This is a Kansas Systemwide Transfer Course. Prerequisite(s): MATH 111 with a C or better or equivalent.",
-                            MaxCapacity = 30,
-                            Professor = "Prof42",
-                            Time = "M/W/F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 42,
-                            CourseCode = "AC121",
-                            CourseName = "Cybersecurity Awareness",
-                            Credits = 3,
-                            CurrentEnrollment = 30,
-                            Description = "The ability to secure information and systems within a modern enterprise in this modern globalized environment is a growing challenge. Ever-present human threats are global, persistent and increasingly sophisticated. Natural threats are unpredictable but inevitable. Vulnerabilities within the complex and interdependent system of systems continue to be discovered with many more yet to become common knowledge. Exploited vulnerabilities can have a devastating impact on an organization or even a society. This course is designed to familiarize users with information, cyberspace and security principles needed to understand these threats. To this end, the course addresses a range of topics, including information infrastructures, social engineering, information system exploitation techniques and countermeasures to the threats discussed. Pre- or corequisite(s): PHIL 125 or PHIL 105.",
-                            MaxCapacity = 30,
-                            Professor = "Prof43",
-                            Time = "T/TR 8:30 AM - 10:00 AM"
-                        },
-                        new
-                        {
-                            CourseId = 43,
-                            CourseCode = "AC201",
-                            CourseName = "Introductory Design Project",
-                            Credits = 1,
-                            CurrentEnrollment = 2,
-                            Description = "The first of the three-course project design series. The course introduces students to project design, prototyping, engineering standards and professional reports. Students are part of teams, learn prototyping skills and have hands on experiences in a maker-space. Students learn project management tools, team working tools, how to perform market research and develop videos, and prototype development. Prerequisite(s): FYET 102A, FYET 102B, ENGR 302, ID 300 or instructor's consent.",
-                            MaxCapacity = 30,
-                            Professor = "Prof44",
-                            Time = "M/W/F 4:15 PM - 5:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 44,
-                            CourseCode = "AC222",
-                            CourseName = "Applied Computing Fundamentals",
-                            Credits = 3,
-                            CurrentEnrollment = 12,
-                            Description = "Information technology (IT) virtually connects people and businesses in the world. The daily operations of every organization in the public and private sector heavily rely on the internet. This course allows students to gain vital concepts on computer hardware, computer systems, networking and security to solve real-world computing challenges. This course is a key for anyone who wants to gain basic skills in the computing sector. Students collaborate effectively and think critically to develop skills in computing and networking. Students learn to use industry-standard tools through hands-on class projects.",
-                            MaxCapacity = 30,
-                            Professor = "Prof45",
-                            Time = "M/W/F 11:45 AM - 1:20 PM"
-                        },
-                        new
-                        {
-                            CourseId = 45,
-                            CourseCode = "AC301",
-                            CourseName = "Junior Project",
-                            Credits = 2,
-                            CurrentEnrollment = 30,
-                            Description = "Second course in four-course project sequence. Introduces students to engineering design concepts with an entrepreneurial mindset. This includes customer discovery and value creation techniques as well as engineering design and project management tools. Prerequisite(s): AC 201 or ENGR 205 or instructor's consent.",
-                            MaxCapacity = 50,
-                            Professor = "Prof46",
-                            Time = "M/W/F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 46,
-                            CourseCode = "AC321",
-                            CourseName = "Applied Networking",
-                            Credits = 3,
-                            CurrentEnrollment = 22,
-                            Description = "Information technology (IT) virtually connects people and businesses in the world. The daily operations of every organization in the public and private sector heavily rely on the internet. This course allows students to gain vital concepts on computer networking and security to solve real-world computing challenges. This course is a key for anyone who wants to gain advanced skills in the computing sector. Students collaborate effectively and think critically to develop skills in computer networking. Students learn to use industry-standard tools through hands-on class projects.",
-                            MaxCapacity = 30,
-                            Professor = "Prof47",
-                            Time = "M/W/F 3:45 PM - 5:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 47,
-                            CourseCode = "AC322",
-                            CourseName = "Applied Programming and Scripting",
-                            Credits = 3,
-                            CurrentEnrollment = 21,
-                            Description = "Good scripting skills are vital to IT experts in the fields of information security. This course is designed for cybersecurity professionals who are interested in learning basic coding skills to perform the cybersecurity tasks more efficiently. The course assists students in taking their cybersecurity career to the next level by teaching the vital skills needed to develop as well as customize applications that interact with file systems, databases, networks and websites. Covers command shell scripting (cmd, powershell, bash) in Windows and Linux operating systems. Emphasizes scripting cybersecurity tasks such as system configuration, system auditing and penetration testing. Also covers Arduino microcontrollers, coding Arduino in Python and coding TCP Traceroute. Python language is used in this course. Prerequisite(s): AC 222 or MIS 325.",
-                            MaxCapacity = 30,
-                            Professor = "Prof48",
-                            Time = "F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 48,
-                            CourseCode = "AC324",
-                            CourseName = "Applied Web Applications and Database Development",
-                            Credits = 3,
-                            CurrentEnrollment = 14,
-                            Description = "When browsing on a web application, look for two things: how user-friendly the web app is and how the information is stored, controlled and used. Each web application has a set of requirements such as financial transaction, customer information, etc. The course covers web and database technologies, services, protocols, design and operation. Students learn a variety of languages including HTML, CSS, Apache and MySQL. Course is designed to apply the languages through hands-on projects. Prerequisite(s): AC 222 or MIS 325 or CS 664. Pre- or corequisite(s): ECON 201 or IME 255.",
-                            MaxCapacity = 30,
-                            Professor = "Prof49",
-                            Time = "F 12:45 PM - 2:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 49,
-                            CourseCode = "AC326",
-                            CourseName = "Cyber Operations",
-                            Credits = 3,
-                            CurrentEnrollment = 1,
-                            Description = "Covers concepts related to cyber attack, penetration testing, cyber intelligence, cryptography and cyber defense. Students learn the attacker's perspective and how security infrastructure integrates with the rest of the business and IT infrastructure through the use of hands-on projects. Prerequisite(s): AC 121, AC 222, AC 321 and AC 322 .",
-                            MaxCapacity = 30,
-                            Professor = "Prof50",
-                            Time = "M/W/F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 50,
-                            CourseCode = "AC352",
-                            CourseName = "Competitive Ethical Hacking",
-                            Credits = 3,
-                            CurrentEnrollment = 9,
-                            Description = "Kevin Mitnick, who popularized the term “social engineering,” explained that it is much easier to trick someone into revealing a password for a system than to exert the effort of hacking into the system. Mitnick claims that this social engineering tactic was the single-most effective method in his arsenal. This course covers human threats to cybersecurity in political, social and economic contexts. It includes targeted exploitation/manipulation of individuals, small groups and larger groups through social engineering, marketing, propaganda, psychological operations by personal contact, email, social networking, web and RF transmission. Prerequisite(s): AC 121 .",
-                            MaxCapacity = 25,
-                            Professor = "Prof51",
-                            Time = "M/W/F 1:45 PM - 3:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 51,
-                            CourseCode = "AC363",
-                            CourseName = "Human Threats to Cybersecurity",
-                            Credits = 3,
-                            CurrentEnrollment = 9,
-                            Description = "Cross-listed as CS 352. Presents fundamental concepts of competitive ethical hacking in computer and network security. The course introduces the command line interface, open-source intelligence, cryptography, digital forensics, web application security, software reverse engineering, secure programming and log analysis. Assignments include participating in capture the flag competitions. Prerequisite(s): CS 211 or (AC 121 and AC 322).",
-                            MaxCapacity = 30,
-                            Professor = "Prof52",
-                            Time = "T/TR 2:45 PM - 4:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 52,
-                            CourseCode = "AC401",
-                            CourseName = "Senior Project I",
-                            Credits = 3,
-                            CurrentEnrollment = 39,
-                            Description = "The third of the four-course project design series. In this intermediate course, students learn the importance of the voice of the customer, the customer/product market fit through using the business model canvas, and engineering design tools. Students learn and practice customer interview techniques and, through the feedback, help to develop appropriate solutions and prototypes. Students perform individual observations to discover unmet needs in industry and, after refining the needs, teams form to solve these needs. Comprehensively covers the student’s concentration in applied computing and its applications. Students work with faculty and external consultants and industry to refine their team based senior project. Prerequisite(s): AC 301 and PHYS 213. Pre- or corequisite(s): PHIL 354.",
-                            MaxCapacity = 75,
-                            Professor = "Prof53",
-                            Time = "F 1:45 PM - 4:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 53,
-                            CourseCode = "AC402",
-                            CourseName = "Senior Project II",
-                            Credits = 3,
-                            CurrentEnrollment = 27,
-                            Description = "Comprehensively covers the student’s concentration in applied computing and its applications. Students continue to work in their teams with faculty and external consultants and industry to refine and develop a final solution for their team based senior project. Prerequisite(s): AC 401.",
-                            MaxCapacity = 75,
-                            Professor = "Prof54",
-                            Time = "F 1:45 PM - 4:15 PM"
-                        },
-                        new
-                        {
-                            CourseId = 54,
-                            CourseCode = "AC461",
-                            CourseName = "Digital Forensics",
-                            Credits = 3,
-                            CurrentEnrollment = 20,
-                            Description = "Covers concepts related to hardware and software forensics, incident response, cyber crime and cyber law enforcement. Students learn different aspects of computer and cyber crime and ways to uncover, protect, exploit and document digital evidence. Students are exposed to different types of tools (both software and hardware), techniques and procedures, and are able to use them to perform rudimentary forensic investigations. Focuses on the entire life cycle of incident response including preparation, data collection, data analysis and remediation. Real world case studies reveal the methods behind and remediation strategies for today's most insidious attacks. Prerequisite(s): AC 326 .",
-                            MaxCapacity = 30,
-                            Professor = "Prof55",
-                            Time = "M/W/F 9:30 AM - 11:15 AM"
-                        },
-                        new
-                        {
-                            CourseId = 55,
-                            CourseCode = "AC462",
-                            CourseName = "Cyber Physical Systems",
-                            Credits = 4,
-                            CurrentEnrollment = 15,
-                            Description = "Focuses on trustworthy and resilient CPS, starting with NIST's CPS Framework. Students learn about common IoT infrastructures, integrate CPS into organizational risk management, and conduct cybersecurity risk assessments for critical cyber physical systems. Prerequisite(s): ENGR 220 and AC 326, or instructor’s consent.",
+                            Description = "An elementary study of linear algebra, including an examination of linear transformations and matrices over finite dimensional spaces. Prerequisite(s): MATH 243 with a grade point of 2.000 or better.",
                             MaxCapacity = 35,
-                            Professor = "Prof56",
-                            Time = "M/W/F 11:15 AM - 12:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 56,
-                            CourseCode = "AC463",
-                            CourseName = "Cyber Risk Management",
-                            Credits = 3,
-                            CurrentEnrollment = 16,
-                            Description = "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.",
-                            MaxCapacity = 35,
-                            Professor = "Prof56",
-                            Time = "M/W/F 10:45 AM - 12:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 57,
-                            CourseCode = "AC464",
-                            CourseName = "Web Application Security",
-                            Credits = 3,
-                            CurrentEnrollment = 21,
-                            Description = "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .",
-                            MaxCapacity = 35,
-                            Professor = "Prof56",
-                            Time = "M/W/F 11:15 AM - 12:45 PM"
-                        },
-                        new
-                        {
-                            CourseId = 58,
-                            CourseCode = "ENGR220",
-                            CourseName = "Applied Analog and Digital Electronics",
-                            Credits = 3,
-                            CurrentEnrollment = 14,
-                            Description = "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.",
-                            MaxCapacity = 35,
-                            Professor = "Prof56",
-                            Time = "T/TR 11:15 AM - 12:45 PM"
-                        });
-                });
-
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Major")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SemesterSuggestion")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("DegreeRequirements");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 3,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 4,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CourseId = 25,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CourseId = 30,
-                            IsRequired = true,
-                            Major = "Computer Science",
-                            SemesterSuggestion = 5
+                            Professor = "Prof36",
+                            Time = "M/W/F 1:45 PM - 3:15 PM"
                         });
                 });
 
@@ -862,7 +531,7 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2025, 4, 10, 9, 4, 15, 500, DateTimeKind.Local).AddTicks(4293),
+                            EnrollmentDate = new DateTime(2024, 12, 5, 12, 59, 13, 575, DateTimeKind.Local).AddTicks(1183),
                             StudentId = 1
                         });
                 });
@@ -966,17 +635,6 @@ namespace CourseScheduling.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Waitlists");
-                });
-
-            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
-                {
-                    b.HasOne("CourseScheduling.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>

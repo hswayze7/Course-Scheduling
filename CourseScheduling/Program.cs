@@ -1,5 +1,7 @@
 
 using CourseScheduling.Models;
+using CourseScheduling.Services;
+
 //using CourseScheduling.Services;
 
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<StudentService>();
 
-
+builder.Services.AddSession();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Adjust session timeout as needed
