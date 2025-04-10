@@ -8,6 +8,8 @@ namespace CourseScheduling.ViewModel
     {
         public List<Course> AvailableCourses { get; set; }
         public List<Enrollment> EnrolledCourses { get; set; }
+
+        public List<Course> RecommendedCourses { get; set; }
         public int TotalCredits => EnrolledCourses?.Sum(e => e.Course?.Credits ?? 0) ?? 0;  // Calculated from enrolled courses
 
         // Helper to determine if a course is already enrolled
@@ -18,7 +20,9 @@ namespace CourseScheduling.ViewModel
 
         public bool HasConflict {  get; set; }
 
+        public int StudentId { get; set; }
 
+        public string Major { get; set; }
 
     }
 

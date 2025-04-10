@@ -1,0 +1,29 @@
+﻿@model CourseScheduling.ViewModel.RecommendationViewModel
+
+<h2>See Recommended Courses</h2>
+<p>Your major: @Model.Major</p>
+
+@if (!Model.RecommendedCourses.Any())
+{
+    <p>No recommended courses found for your major.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var course in Model.RecommendedCourses)
+            {
+                <tr>
+                    <td>@course.CourseCode</td>
+                    <td>@course.CourseName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -91,3 +91,8 @@ The following demonstrates the registration process, showing the registration pa
 Created a 'profile' the the user / student that shows information about classes / in general
 
 ![Image](https://github.com/user-attachments/assets/93747244-e532-41b7-bcae-81dc1d6f969a)
+
+
+Recommendation Table based on user's major.
+
+![Image](https://github.com/user-attachments/assets/257b70c4-0504-48f7-bb77-336f0d735068)

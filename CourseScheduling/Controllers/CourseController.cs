@@ -62,15 +62,59 @@ namespace CourseScheduling.Controllers
             ViewBag.EnrolledCourses = enrolledCourses;
             ViewBag.WaitlistedCourses = waitlistedCourses;
 
+            var student = await _context.Students.FindAsync(studentId);
+            var majorPrefix = GetCoursePrefixFromMajor(student.Major ?? "");
+            var recommendedCourses = await _context.Courses
+                .Where(c => c.CourseCode.StartsWith(majorPrefix))
+                .ToListAsync();
+
             // Prepare the view model
             var viewModel = new CourseEnrollmentViewModel
             {
+                StudentId = studentId.Value,
                 AvailableCourses = availableCourses,
-                EnrolledCourses = enrolledCourses
+                EnrolledCourses = enrolledCourses,
+                RecommendedCourses = recommendedCourses
             };
 
             return View(viewModel);
         }
+        //Recommended courses based on CourseID
+        public async Task<IActionResult> RecommendedCourses(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var majorPrefix = GetCoursePrefixFromMajor(student.Major ?? "");
+
+            var recommendedCourses = await _context.Courses
+                .Where(c => c.CourseCode.StartsWith(majorPrefix))
+                .ToListAsync();
+
+            var viewModel = new RecommendationViewModel
+            {
+                Major = student.Major,
+                RecommendedCourses = recommendedCourses
+            };
+
+            return View(viewModel); // ✅ must pass the viewModel here
+        }
+
+        private static string GetCoursePrefixFromMajor(string major)
+        {
+            return major switch
+            {
+                "Computer Science" => "CS",
+                "Business" => "BUS",
+                "Mathematics" => "MATH",
+                "Biology" => "BIO",
+                _ => "" // Default fallback
+            };
+        }
+
 
         private bool HasTimeConflict(string time1, string time2)
         {
