@@ -19,6 +19,9 @@
 
         public DbSet<DegreeRequirement> DegreeRequirements { get; set; }
 
+        public DbSet<CoursePrerequisite> CoursePrerequisites { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -28,7 +31,7 @@
                 new Course { CourseId = 2, CourseCode = "MATH243", CourseName = "Calculus II", Credits = 4, Time = "T/TR 1:00 PM - 3:00 PM", Professor = "Prof2", Description = "General education math and natural sciences course. Analytic geometry and the calculus in an interrelated form. Students may receive credit for only one of these courses: MATH 144, 242 or 251. This is a Kansas Systemwide Transfer Course.", MaxCapacity = 25, CurrentEnrollment = 5 },
                 new Course { CourseId = 3, CourseCode = "CS400", CourseName = "Data Structures", Credits = 4, Time = "T/TR 2:15 PM - 3:30 PM", Professor = "Prof3", Description = "Introduces basic data structures and covers their implementations using classes in C++. Includes lists, stacks, queues, binary trees and hash tables.", MaxCapacity = 35, CurrentEnrollment = 2 },
                 new Course { CourseId = 4, CourseCode = "CS510", CourseName = "Programming Language Concepts", Credits = 3, Time = "T/TR 8:30 AM - 9:50 AM", Professor = "Prof13", Description = "Theoretical concepts in the design and use of programming languages. Formal syntax, including Backus Normal Form (BNF), Extended Backus-Naur Form (EBNF), and syntax diagrams. Semantics, including declaration, allocation and evaluation, symbol table and runtime environment; data types and type checking, procedure activation and parameter passing, modules and abstract data types.", MaxCapacity = 40, CurrentEnrollment = 15 },
-                new Course { CourseId = 5, CourseCode = "MATH231", CourseName = "Discrete Structures I", Credits = 3, Time = "M/W/F 1:00 PM - 3:00 PM", Professor = "Prof4", Description = "A study of some of the basic topics of discrete mathematics, including elementary logic, properties of sets, mathematical induction, counting problems using permutations and combinations, trees, elementary probability, and an introduction to graph theory.", MaxCapacity = 25, CurrentEnrollment = 25 },
+                new Course { CourseId = 5, CourseCode = "MATH321", CourseName = "Discrete Structures I", Credits = 3, Time = "M/W/F 1:00 PM - 3:00 PM", Professor = "Prof4", Description = "A study of some of the basic topics of discrete mathematics, including elementary logic, properties of sets, mathematical induction, counting problems using permutations and combinations, trees, elementary probability, and an introduction to graph theory.", MaxCapacity = 25, CurrentEnrollment = 25 },
                 new Course { CourseId = 6, CourseCode = "PSY325", CourseName = "Developmental Psychology", Credits = 3, Time = "M/T/F 12:30 PM - 1:45 PM", Professor = "Prof5", Description = "Studies systems of formal logic including sentential and predicate logic. Emphasizes the uses of these systems in the analysis of arguments.", MaxCapacity = 50, CurrentEnrollment = 25 },
                 new Course { CourseId = 7, CourseCode = "SOC338", CourseName = "Health & Lifestyle", Credits = 3, Time = "M/W/F 2:15 PM - 3:30 PM", Professor = "Prof6", Description = "General education social and behavioral sciences course. Examines the component dimensions of health and the societal-level factors and lifestyle choices that influence health across the life span.", MaxCapacity = 30, CurrentEnrollment = 10 },
                 new Course { CourseId = 8, CourseCode = "MKT690J", CourseName = "Social Media Marketing", Credits = 3, Time = "T/TR 9:30 AM - 10:45 AM", Professor = "Prof7", Description = "Social media is an essential part of today’s digital marketing mix and integral to a successful digital strategy. This course provides an introduction to social media marketing and lays the foundation for developing an effective social media campaign. Students learn what social media marketing entails, including the various platforms that exist, selecting the appropriate channels to fit their needs, setting goals and success metrics, and constructing social media strategies that achieve the desired marketing goals. Students also are introduced to quantitative and qualitative measurement tools to evaluate social media initiatives and assess their return on investment for an organization.", MaxCapacity = 20, CurrentEnrollment = 12 },
@@ -79,9 +82,10 @@
                 new Course { CourseId = 53, CourseCode = "AC402", CourseName = "Senior Project II", Credits = 3, Time = "F 1:45 PM - 4:15 PM", Professor = "Prof54", Description = "Comprehensively covers the student’s concentration in applied computing and its applications. Students continue to work in their teams with faculty and external consultants and industry to refine and develop a final solution for their team based senior project. Prerequisite(s): AC 401.", MaxCapacity = 75, CurrentEnrollment = 27 },
                 new Course { CourseId = 54, CourseCode = "AC461", CourseName = "Digital Forensics", Credits = 3, Time = "M/W/F 9:30 AM - 11:15 AM", Professor = "Prof55", Description = "Covers concepts related to hardware and software forensics, incident response, cyber crime and cyber law enforcement. Students learn different aspects of computer and cyber crime and ways to uncover, protect, exploit and document digital evidence. Students are exposed to different types of tools (both software and hardware), techniques and procedures, and are able to use them to perform rudimentary forensic investigations. Focuses on the entire life cycle of incident response including preparation, data collection, data analysis and remediation. Real world case studies reveal the methods behind and remediation strategies for today's most insidious attacks. Prerequisite(s): AC 326 .", MaxCapacity = 30, CurrentEnrollment = 20 },
                 new Course { CourseId = 55, CourseCode = "AC462", CourseName = "Cyber Physical Systems", Credits = 4, Time = "M/W/F 11:15 AM - 12:45 PM", Professor = "Prof56", Description = "Focuses on trustworthy and resilient CPS, starting with NIST's CPS Framework. Students learn about common IoT infrastructures, integrate CPS into organizational risk management, and conduct cybersecurity risk assessments for critical cyber physical systems. Prerequisite(s): ENGR 220 and AC 326, or instructor’s consent.", MaxCapacity = 35, CurrentEnrollment = 15 },
-                new Course { CourseId = 56, CourseCode = "AC463", CourseName = "Cyber Risk Management", Credits = 3, Time = "M/W/F 10:45 AM - 12:45 PM", Professor = "Prof56", Description = "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.", MaxCapacity = 35, CurrentEnrollment = 16 },
-                new Course { CourseId = 57, CourseCode = "AC464", CourseName = "Web Application Security", Credits = 3, Time = "M/W/F 11:15 AM - 12:45 PM", Professor = "Prof56", Description = "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .", MaxCapacity = 35, CurrentEnrollment = 21 },
-                new Course { CourseId = 58, CourseCode = "ENGR220", CourseName = "Applied Analog and Digital Electronics", Credits = 3, Time = "T/TR 11:15 AM - 12:45 PM", Professor = "Prof56", Description = "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.", MaxCapacity = 35, CurrentEnrollment = 14 }
+                new Course { CourseId = 56, CourseCode = "AC463", CourseName = "Cyber Risk Management", Credits = 3, Time = "M/W/F 10:45 AM - 12:45 PM", Professor = "Prof57", Description = "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.", MaxCapacity = 35, CurrentEnrollment = 16 },
+                new Course { CourseId = 57, CourseCode = "AC464", CourseName = "Web Application Security", Credits = 3, Time = "M/W/F 11:15 AM - 12:45 PM", Professor = "Prof58", Description = "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .", MaxCapacity = 35, CurrentEnrollment = 21 },
+                new Course { CourseId = 58, CourseCode = "ENGR220", CourseName = "Applied Analog and Digital Electronics", Credits = 3, Time = "T/TR 11:15 AM - 12:45 PM", Professor = "Prof59", Description = "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.", MaxCapacity = 35, CurrentEnrollment = 14 },
+                new Course { CourseId = 59, CourseCode = "MATH511", CourseName = "Linear Algebra", Credits = 3, Time = "T/TR 12:30 PM - 1:45 PM", Professor = "Prof60", Description = "An elementary study of linear algebra, including an examination of linear transformations and matrices over finite dimensional spaces. Prerequisite(s): MATH 243 with a grade point of 2.000 or better.", MaxCapacity = 45, CurrentEnrollment = 38 }
 
 
 
@@ -90,26 +94,108 @@
             );
 
             modelBuilder.Entity<DegreeRequirement>().HasData(
-                 new DegreeRequirement { Id = 1, Major = "Computer Science", CourseId = 1, IsRequired = true, SemesterSuggestion = 1 }, // CS101
-                new DegreeRequirement { Id = 2, Major = "Computer Science", CourseId = 3, IsRequired = true, SemesterSuggestion = 2 }, // CS400
-                new DegreeRequirement { Id = 3, Major = "Computer Science", CourseId = 4, IsRequired = true, SemesterSuggestion = 3 }, // CS510
-                 new DegreeRequirement { Id = 4, Major = "Computer Science", CourseId = 25, IsRequired = true, SemesterSuggestion = 4 }, // CS311
-                new DegreeRequirement { Id = 5, Major = "Computer Science", CourseId = 30, IsRequired = true, SemesterSuggestion = 5 }  // CS540
-    
+                    new DegreeRequirement { DegreeRequirementId = 1, DegreeId = 1, Major = "Computer Science", CourseId = 1, CourseCode = "CS101", IsRequired = true, SemesterSuggestion = 1 },
+                    new DegreeRequirement { DegreeRequirementId = 2, DegreeId = 1, Major = "Computer Science", CourseId = 3, CourseCode = "CS400", IsRequired = true, SemesterSuggestion = 2 },
+                    new DegreeRequirement { DegreeRequirementId = 3, DegreeId = 1, Major = "Computer Science", CourseId = 4, CourseCode = "CS510", IsRequired = true, SemesterSuggestion = 3 },
+                    new DegreeRequirement { DegreeRequirementId = 4, DegreeId = 1, Major = "Computer Science", CourseId = 23, CourseCode = "CS211", IsRequired = true, SemesterSuggestion = 4 },
+                    new DegreeRequirement { DegreeRequirementId = 5, DegreeId = 1, Major = "Computer Science", CourseId = 25, CourseCode = "CS311", IsRequired = true, SemesterSuggestion = 5 },
+                    new DegreeRequirement { DegreeRequirementId = 6, DegreeId = 1, Major = "Computer Science", CourseId = 27, CourseCode = "CS410", IsRequired = true, SemesterSuggestion = 6 },
+                    new DegreeRequirement { DegreeRequirementId = 7, DegreeId = 1, Major = "Computer Science", CourseId = 28, CourseCode = "CS664", IsRequired = true, SemesterSuggestion = 7 },
+                    new DegreeRequirement { DegreeRequirementId = 8, DegreeId = 1, Major = "Computer Science", CourseId = 29, CourseCode = "CS580", IsRequired = true, SemesterSuggestion = 8 },
+                    new DegreeRequirement { DegreeRequirementId = 9, DegreeId = 1, Major = "Computer Science", CourseId = 30, CourseCode = "CS540", IsRequired = true, SemesterSuggestion = 9 },
+                    new DegreeRequirement { DegreeRequirementId = 10, DegreeId = 1, Major = "Computer Science", CourseId = 31, CourseCode = "CS560", IsRequired = true, SemesterSuggestion = 10 },
+                    new DegreeRequirement { DegreeRequirementId = 11, DegreeId = 1, Major = "Computer Science", CourseId = 32, CourseCode = "CS665", IsRequired = true, SemesterSuggestion = 11 },
+                    new DegreeRequirement { DegreeRequirementId = 12, DegreeId = 1, Major = "Computer Science", CourseId = 33, CourseCode = "CS356", IsRequired = true, SemesterSuggestion = 12 },
+                    new DegreeRequirement { DegreeRequirementId = 13, DegreeId = 1, Major = "Computer Science", CourseId = 34, CourseCode = "CS598", IsRequired = true, SemesterSuggestion = 13 },
+                    new DegreeRequirement { DegreeRequirementId = 14, DegreeId = 1, Major = "Computer Science", CourseId = 35, CourseCode = "CS599", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 15, DegreeId = 1, Major = "Computer Science", CourseId = 2, CourseCode = "MATH243", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 16, DegreeId = 1, Major = "Computer Science", CourseId = 5, CourseCode = "MATH321", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 17, DegreeId = 1, Major = "Computer Science", CourseId = 16, CourseCode = "MATH242", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 18, DegreeId = 1, Major = "Computer Science", CourseId = 14, CourseCode = "PHIL125", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 19, DegreeId = 1, Major = "Computer Science", CourseId = 17, CourseCode = "PHYS314", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 20, DegreeId = 1, Major = "Computer Science", CourseId = 18, CourseCode = "PHYS316", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 21, DegreeId = 1, Major = "Computer Science", CourseId = 20, CourseCode = "PHYS313", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 22, DegreeId = 1, Major = "Computer Science", CourseId = 15, CourseCode = "PHIL354", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 23, DegreeId = 1, Major = "Computer Science", CourseId = 19, CourseCode = "MATH322", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 24, DegreeId = 1, Major = "Computer Science", CourseId = 59, CourseCode = "MATH511", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 25, DegreeId = 1, Major = "Computer Science", CourseId = 21, CourseCode = "IME254", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 26, DegreeId = 1, Major = "Computer Science", CourseId = 22, CourseCode = "ECE194", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 27, DegreeId = 1, Major = "Computer Science", CourseId = 24, CourseCode = "ECE238", IsRequired = true, SemesterSuggestion = 14 },
+                    new DegreeRequirement { DegreeRequirementId = 28, DegreeId = 1, Major = "Computer Science", CourseId = 26, CourseCode = "ECE394", IsRequired = true, SemesterSuggestion = 14 }
             );
+
+            modelBuilder.Entity<Degree>().HasData(
+                new Degree { DegreeId = 1, MajorName = "Computer Science" }
+            );
+
+
 
             modelBuilder.Entity<Student>().HasData(
                new Student
                {
                    StudentId = 1,  // Set a unique ID for the student
+                   Username = "Tstudent",
                    FirstName = "Test Student",
                    LastName = "Onetest Student",
                    Email = "test@student.com",
                    Password = "test123",  
                    Major = "Computer Science",
-                   Year = "Sophomore"
+                   Year = "Sophomore",
+                   DegreeId = 1
                }
            );
+
+            modelBuilder.Entity<Enrollment>().HasData(
+            new Enrollment
+                {
+                    EnrollmentId = 1,
+                    CourseId = 1,
+                    StudentId = 1,
+                EnrollmentDate = new DateTime(2025, 5, 7),
+                    Grade = "A" 
+                },
+            new Enrollment
+                {
+                    EnrollmentId = 2,
+                    CourseId = 3,
+                    StudentId = 1,
+                    EnrollmentDate = new DateTime(2025, 5, 7),
+                    Grade = null 
+                },
+            new Enrollment
+                {
+                    EnrollmentId = 3,
+                    CourseId = 4,
+                    StudentId = 1,
+                    EnrollmentDate = new DateTime(2025, 5, 7),
+                    Grade = "B+" 
+            },
+            new Enrollment
+            {
+                EnrollmentId = 4, // make sure this is unique
+                CourseId = 16,    // MATH242 (Calculus I)
+                StudentId = 1,
+                EnrollmentDate = new DateTime(2024, 8, 20), // adjust as needed
+                Grade = "B+"     // indicate completion
+            }
+            );
+
+            modelBuilder.Entity<CoursePrerequisite>().HasData(
+                 new CoursePrerequisite
+                  {
+                        CoursePrerequisiteId = 1,
+                        CourseId = 2,                // MATH243 - Calculus II
+                        PrerequisiteCourseId = 16    // MATH242 - Calculus I
+                  },
+                 new CoursePrerequisite
+                  {
+                        CoursePrerequisiteId = 2,
+                        CourseId = 17,               // PHYS314 - Physics II
+                        PrerequisiteCourseId = 20    // PHYS313 - Physics I
+                  }
+             );
+
+
 
             modelBuilder.Entity<Enrollment>()
                 .HasOne(e => e.Course)
@@ -121,15 +207,7 @@
                 .WithMany(s => s.Enrollments)
                 .HasForeignKey(e => e.StudentId);
 
-            modelBuilder.Entity<Enrollment>().HasData(
-            new Enrollment
-            {
-                EnrollmentId = 1,  // Unique identifier for the enrollment
-                CourseId = 1,      // Enroll in the course with CourseId = 1
-                StudentId = 1,     // Enroll the student with StudentId = 1
-                EnrollmentDate = DateTime.Now
-            }
-        );
+        
 
             // Define relationships
             modelBuilder.Entity<Waitlist>()
@@ -141,11 +219,31 @@
                 .HasOne(w => w.Student)
                 .WithMany()
                 .HasForeignKey(w => w.StudentId);
+
+
+            modelBuilder.Entity<CoursePrerequisite>()
+                .HasKey(cp => new { cp.CourseId, cp.PrerequisiteCourseId });
+
+            modelBuilder.Entity<CoursePrerequisite>()
+                .HasOne(cp => cp.Course)
+                .WithMany(c => c.Prerequisites)
+                .HasForeignKey(cp => cp.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CoursePrerequisite>()
+                .HasOne(cp => cp.PrerequisiteCourse)
+                .WithMany()
+                .HasForeignKey(cp => cp.PrerequisiteCourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
 
 
-      
+
+
 
     }
+
+
 
 }

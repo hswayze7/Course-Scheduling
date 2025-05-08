@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250228014536_UpdateCap")]
-    partial class UpdateCap
+    [Migration("20250508030626_MoreDegreeReqs")]
+    partial class MoreDegreeReqs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,16 +109,16 @@ namespace CourseScheduling.Migrations
                             CourseCode = "CS510",
                             CourseName = "Programming Language Concepts",
                             Credits = 3,
-                            CurrentEnrollment = 40,
+                            CurrentEnrollment = 15,
                             Description = "Theoretical concepts in the design and use of programming languages. Formal syntax, including Backus Normal Form (BNF), Extended Backus-Naur Form (EBNF), and syntax diagrams. Semantics, including declaration, allocation and evaluation, symbol table and runtime environment; data types and type checking, procedure activation and parameter passing, modules and abstract data types.",
-                            MaxCapacity = 15,
+                            MaxCapacity = 40,
                             Professor = "Prof13",
                             Time = "T/TR 8:30 AM - 9:50 AM"
                         },
                         new
                         {
                             CourseId = 5,
-                            CourseCode = "MATH231",
+                            CourseCode = "MATH321",
                             CourseName = "Discrete Structures I",
                             Credits = 3,
                             CurrentEnrollment = 25,
@@ -133,9 +133,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "PSY325",
                             CourseName = "Developmental Psychology",
                             Credits = 3,
-                            CurrentEnrollment = 50,
+                            CurrentEnrollment = 25,
                             Description = "Studies systems of formal logic including sentential and predicate logic. Emphasizes the uses of these systems in the analysis of arguments.",
-                            MaxCapacity = 25,
+                            MaxCapacity = 50,
                             Professor = "Prof5",
                             Time = "M/T/F 12:30 PM - 1:45 PM"
                         },
@@ -577,9 +577,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC201",
                             CourseName = "Introductory Design Project",
                             Credits = 1,
-                            CurrentEnrollment = 30,
+                            CurrentEnrollment = 2,
                             Description = "The first of the three-course project design series. The course introduces students to project design, prototyping, engineering standards and professional reports. Students are part of teams, learn prototyping skills and have hands on experiences in a maker-space. Students learn project management tools, team working tools, how to perform market research and develop videos, and prototype development. Prerequisite(s): FYET 102A, FYET 102B, ENGR 302, ID 300 or instructor's consent.",
-                            MaxCapacity = 2,
+                            MaxCapacity = 30,
                             Professor = "Prof44",
                             Time = "M/W/F 4:15 PM - 5:45 PM"
                         },
@@ -603,7 +603,7 @@ namespace CourseScheduling.Migrations
                             Credits = 2,
                             CurrentEnrollment = 30,
                             Description = "Second course in four-course project sequence. Introduces students to engineering design concepts with an entrepreneurial mindset. This includes customer discovery and value creation techniques as well as engineering design and project management tools. Prerequisite(s): AC 201 or ENGR 205 or instructor's consent.",
-                            MaxCapacity = 18,
+                            MaxCapacity = 50,
                             Professor = "Prof46",
                             Time = "M/W/F 1:45 PM - 3:15 PM"
                         },
@@ -613,9 +613,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC321",
                             CourseName = "Applied Networking",
                             Credits = 3,
-                            CurrentEnrollment = 30,
+                            CurrentEnrollment = 22,
                             Description = "Information technology (IT) virtually connects people and businesses in the world. The daily operations of every organization in the public and private sector heavily rely on the internet. This course allows students to gain vital concepts on computer networking and security to solve real-world computing challenges. This course is a key for anyone who wants to gain advanced skills in the computing sector. Students collaborate effectively and think critically to develop skills in computer networking. Students learn to use industry-standard tools through hands-on class projects.",
-                            MaxCapacity = 22,
+                            MaxCapacity = 30,
                             Professor = "Prof47",
                             Time = "M/W/F 3:45 PM - 5:15 PM"
                         },
@@ -709,9 +709,9 @@ namespace CourseScheduling.Migrations
                             CourseCode = "AC461",
                             CourseName = "Digital Forensics",
                             Credits = 3,
-                            CurrentEnrollment = 30,
+                            CurrentEnrollment = 20,
                             Description = "Covers concepts related to hardware and software forensics, incident response, cyber crime and cyber law enforcement. Students learn different aspects of computer and cyber crime and ways to uncover, protect, exploit and document digital evidence. Students are exposed to different types of tools (both software and hardware), techniques and procedures, and are able to use them to perform rudimentary forensic investigations. Focuses on the entire life cycle of incident response including preparation, data collection, data analysis and remediation. Real world case studies reveal the methods behind and remediation strategies for today's most insidious attacks. Prerequisite(s): AC 326 .",
-                            MaxCapacity = 20,
+                            MaxCapacity = 30,
                             Professor = "Prof55",
                             Time = "M/W/F 9:30 AM - 11:15 AM"
                         },
@@ -736,7 +736,7 @@ namespace CourseScheduling.Migrations
                             CurrentEnrollment = 16,
                             Description = "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.",
                             MaxCapacity = 35,
-                            Professor = "Prof56",
+                            Professor = "Prof57",
                             Time = "M/W/F 10:45 AM - 12:45 PM"
                         },
                         new
@@ -748,7 +748,7 @@ namespace CourseScheduling.Migrations
                             CurrentEnrollment = 21,
                             Description = "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .",
                             MaxCapacity = 35,
-                            Professor = "Prof56",
+                            Professor = "Prof58",
                             Time = "M/W/F 11:15 AM - 12:45 PM"
                         },
                         new
@@ -760,8 +760,363 @@ namespace CourseScheduling.Migrations
                             CurrentEnrollment = 14,
                             Description = "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.",
                             MaxCapacity = 35,
-                            Professor = "Prof56",
+                            Professor = "Prof59",
                             Time = "T/TR 11:15 AM - 12:45 PM"
+                        },
+                        new
+                        {
+                            CourseId = 59,
+                            CourseCode = "MATH511",
+                            CourseName = "Linear Algebra",
+                            Credits = 3,
+                            CurrentEnrollment = 38,
+                            Description = "An elementary study of linear algebra, including an examination of linear transformations and matrices over finite dimensional spaces. Prerequisite(s): MATH 243 with a grade point of 2.000 or better.",
+                            MaxCapacity = 45,
+                            Professor = "Prof60",
+                            Time = "T/TR 12:30 PM - 1:45 PM"
+                        });
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.Degree", b =>
+                {
+                    b.Property<int>("DegreeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DegreeId"));
+
+                    b.Property<string>("MajorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DegreeId");
+
+                    b.ToTable("Degree");
+
+                    b.HasData(
+                        new
+                        {
+                            DegreeId = 1,
+                            MajorName = "Computer Science"
+                        });
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
+                {
+                    b.Property<int>("DegreeRequirementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DegreeRequirementId"));
+
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Major")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SemesterSuggestion")
+                        .HasColumnType("int");
+
+                    b.HasKey("DegreeRequirementId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("DegreeId");
+
+                    b.ToTable("DegreeRequirements");
+
+                    b.HasData(
+                        new
+                        {
+                            DegreeRequirementId = 1,
+                            CourseCode = "CS101",
+                            CourseId = 1,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 1
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 2,
+                            CourseCode = "CS400",
+                            CourseId = 3,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 2
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 3,
+                            CourseCode = "CS510",
+                            CourseId = 4,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 3
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 4,
+                            CourseCode = "CS211",
+                            CourseId = 23,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 4
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 5,
+                            CourseCode = "CS311",
+                            CourseId = 25,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 5
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 6,
+                            CourseCode = "CS410",
+                            CourseId = 27,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 6
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 7,
+                            CourseCode = "CS664",
+                            CourseId = 28,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 7
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 8,
+                            CourseCode = "CS580",
+                            CourseId = 29,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 8
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 9,
+                            CourseCode = "CS540",
+                            CourseId = 30,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 9
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 10,
+                            CourseCode = "CS560",
+                            CourseId = 31,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 10
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 11,
+                            CourseCode = "CS665",
+                            CourseId = 32,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 11
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 12,
+                            CourseCode = "CS356",
+                            CourseId = 33,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 12
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 13,
+                            CourseCode = "CS598",
+                            CourseId = 34,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 13
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 14,
+                            CourseCode = "CS599",
+                            CourseId = 35,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 15,
+                            CourseCode = "MATH243",
+                            CourseId = 2,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 16,
+                            CourseCode = "MATH321",
+                            CourseId = 5,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 17,
+                            CourseCode = "MATH242",
+                            CourseId = 16,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 18,
+                            CourseCode = "PHIL125",
+                            CourseId = 14,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 19,
+                            CourseCode = "PHYS314",
+                            CourseId = 17,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 20,
+                            CourseCode = "PHYS316",
+                            CourseId = 18,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 21,
+                            CourseCode = "PHYS313",
+                            CourseId = 20,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 22,
+                            CourseCode = "PHIL354",
+                            CourseId = 15,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 23,
+                            CourseCode = "MATH322",
+                            CourseId = 19,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 24,
+                            CourseCode = "MATH511",
+                            CourseId = 59,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 25,
+                            CourseCode = "IME254",
+                            CourseId = 21,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 26,
+                            CourseCode = "ECE194",
+                            CourseId = 22,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 27,
+                            CourseCode = "ECE238",
+                            CourseId = 24,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 28,
+                            CourseCode = "ECE394",
+                            CourseId = 26,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
                         });
                 });
 
@@ -773,11 +1128,17 @@ namespace CourseScheduling.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentId"));
 
+                    b.Property<string>("CourseCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EnrollmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -795,7 +1156,23 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2025, 2, 27, 19, 45, 35, 880, DateTimeKind.Local).AddTicks(7934),
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "A",
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 2,
+                            CourseId = 3,
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 3,
+                            CourseId = 4,
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "B+",
                             StudentId = 1
                         });
                 });
@@ -807,6 +1184,9 @@ namespace CourseScheduling.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -828,11 +1208,17 @@ namespace CourseScheduling.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Year")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
+
+                    b.HasIndex("DegreeId");
 
                     b.ToTable("Students");
 
@@ -840,11 +1226,13 @@ namespace CourseScheduling.Migrations
                         new
                         {
                             StudentId = 1,
+                            DegreeId = 1,
                             Email = "test@student.com",
                             FirstName = "Test Student",
                             LastName = "Onetest Student",
                             Major = "Computer Science",
                             Password = "test123",
+                            Username = "Tstudent",
                             Year = "Sophomore"
                         });
                 });
@@ -901,6 +1289,25 @@ namespace CourseScheduling.Migrations
                     b.ToTable("Waitlists");
                 });
 
+            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
+                {
+                    b.HasOne("CourseScheduling.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CourseScheduling.Models.Degree", "Degree")
+                        .WithMany("Requirements")
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Degree");
+                });
+
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>
                 {
                     b.HasOne("CourseScheduling.Models.Course", "Course")
@@ -918,6 +1325,17 @@ namespace CourseScheduling.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.Student", b =>
+                {
+                    b.HasOne("CourseScheduling.Models.Degree", "Degree")
+                        .WithMany()
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Degree");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.StudentCourse", b =>
@@ -963,6 +1381,11 @@ namespace CourseScheduling.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("Waitlists");
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.Degree", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Student", b =>

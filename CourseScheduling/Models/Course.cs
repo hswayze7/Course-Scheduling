@@ -31,5 +31,8 @@ namespace CourseScheduling.Models
 
         [NotMapped]
         public bool HasConflict { get; set; } // New property to indicate conflicts
+
+
+        public List<CoursePrerequisite> Prerequisites { get; set; }
     }
 }

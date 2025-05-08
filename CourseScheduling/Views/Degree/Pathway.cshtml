@@ -1,0 +1,56 @@
+﻿@model CourseScheduling.ViewModel.DegreePathwayViewModel
+
+@{
+    ViewData["Title"] = "Degree Pathway";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<a href="@Url.Action("Profile", "Account")" class="btn btn-primary">
+    <i class="bi bi-arrow-left-circle"></i> Back to Profile
+</a>
+
+<h2>@Model.MajorName Degree Pathway</h2>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model.Courses)
+        {
+            <tr>
+                <td>@course.CourseCode</td>
+                <td>@course.CourseName</td>
+                <td>
+                    @if (course.Status == "Completed")
+                    {
+                        <span class="text-success">
+                            <i class="bi bi-check-circle-fill"></i> Completed
+                        </span>
+                    }
+                    else if (course.Status == "In Progress")
+                    {
+                        <span class="text-warning">
+                            <i class="bi bi-hourglass-split"></i> In Progress
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">
+                            <i class="bi bi-x-circle-fill"></i> Not Taken
+                        </span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

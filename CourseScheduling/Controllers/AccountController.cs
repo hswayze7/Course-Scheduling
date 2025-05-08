@@ -36,7 +36,6 @@ namespace CourseScheduling.Controllers
         {
             if (!ModelState.IsValid)
             {
-
                 return View(model);
             }
 
@@ -45,13 +44,19 @@ namespace CourseScheduling.Controllers
                 return BadRequest("Model cannot be null.");
             }
 
-            var student = _context.Students.FirstOrDefault(s => s.StudentId == model.StudentId);
+            var student = _context.Students
+                .FirstOrDefault(s => s.Username == model.Username && s.Password == model.Password);
 
+            if (student == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                return View(model);
+            }
 
-            // Set authentication
+            // Set session using the StudentId (still primary key)
             HttpContext.Session.SetInt32("StudentId", student.StudentId);
 
-            return RedirectToAction("Profile", "Account"); // Redirect to profile page
+            return RedirectToAction("Profile", "Account");
         }
 
 

@@ -5,7 +5,11 @@ namespace CourseScheduling.Models
 {
     public class DegreeRequirement
     {
-        public int Id { get; set; }
+        public int DegreeRequirementId { get; set; }
+
+        public int DegreeId { get; set; }
+
+        public string CourseCode { get; set; }
 
         [Required]
         public string Major { get; set; }
@@ -16,5 +20,7 @@ namespace CourseScheduling.Models
         public int? SemesterSuggestion { get; set; }
 
         public Course Course { get; set; }
+
+        public Degree Degree { get; set; }
     }
 }

@@ -7,6 +7,11 @@ namespace CourseScheduling.Models
     {
         [Key]
         public int StudentId { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -22,5 +27,8 @@ namespace CourseScheduling.Models
 
 
         public ICollection<Enrollment> Enrollments { get; set; }
+
+        public int DegreeId { get; set; }
+        public Degree Degree { get; set; }
     }
 }

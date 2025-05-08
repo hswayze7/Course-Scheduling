@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250228015030_AnotherCapUpdate")]
-    partial class AnotherCapUpdate
+    [Migration("20250508024142_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -765,6 +765,209 @@ namespace CourseScheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CourseScheduling.Models.Degree", b =>
+                {
+                    b.Property<int>("DegreeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DegreeId"));
+
+                    b.Property<string>("MajorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DegreeId");
+
+                    b.ToTable("Degree");
+
+                    b.HasData(
+                        new
+                        {
+                            DegreeId = 1,
+                            MajorName = "Computer Science"
+                        });
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
+                {
+                    b.Property<int>("DegreeRequirementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DegreeRequirementId"));
+
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Major")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SemesterSuggestion")
+                        .HasColumnType("int");
+
+                    b.HasKey("DegreeRequirementId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("DegreeId");
+
+                    b.ToTable("DegreeRequirements");
+
+                    b.HasData(
+                        new
+                        {
+                            DegreeRequirementId = 1,
+                            CourseCode = "CS101",
+                            CourseId = 1,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 1
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 2,
+                            CourseCode = "CS400",
+                            CourseId = 3,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 2
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 3,
+                            CourseCode = "CS510",
+                            CourseId = 4,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 3
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 4,
+                            CourseCode = "CS211",
+                            CourseId = 23,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 4
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 5,
+                            CourseCode = "CS311",
+                            CourseId = 25,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 5
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 6,
+                            CourseCode = "CS410",
+                            CourseId = 27,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 6
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 7,
+                            CourseCode = "CS664",
+                            CourseId = 28,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 7
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 8,
+                            CourseCode = "CS580",
+                            CourseId = 29,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 8
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 9,
+                            CourseCode = "CS540",
+                            CourseId = 30,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 9
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 10,
+                            CourseCode = "CS560",
+                            CourseId = 31,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 10
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 11,
+                            CourseCode = "CS665",
+                            CourseId = 32,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 11
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 12,
+                            CourseCode = "CS356",
+                            CourseId = 33,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 12
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 13,
+                            CourseCode = "CS598",
+                            CourseId = 34,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 13
+                        },
+                        new
+                        {
+                            DegreeRequirementId = 14,
+                            CourseCode = "CS599",
+                            CourseId = 35,
+                            DegreeId = 1,
+                            IsRequired = true,
+                            Major = "Computer Science",
+                            SemesterSuggestion = 14
+                        });
+                });
+
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>
                 {
                     b.Property<int>("EnrollmentId")
@@ -773,11 +976,17 @@ namespace CourseScheduling.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentId"));
 
+                    b.Property<string>("CourseCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EnrollmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -795,7 +1004,23 @@ namespace CourseScheduling.Migrations
                         {
                             EnrollmentId = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2025, 2, 27, 19, 50, 29, 541, DateTimeKind.Local).AddTicks(867),
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "A",
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 2,
+                            CourseId = 3,
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 3,
+                            CourseId = 4,
+                            EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "B+",
                             StudentId = 1
                         });
                 });
@@ -807,6 +1032,9 @@ namespace CourseScheduling.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -828,11 +1056,17 @@ namespace CourseScheduling.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Year")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
+
+                    b.HasIndex("DegreeId");
 
                     b.ToTable("Students");
 
@@ -840,11 +1074,13 @@ namespace CourseScheduling.Migrations
                         new
                         {
                             StudentId = 1,
+                            DegreeId = 1,
                             Email = "test@student.com",
                             FirstName = "Test Student",
                             LastName = "Onetest Student",
                             Major = "Computer Science",
                             Password = "test123",
+                            Username = "Tstudent",
                             Year = "Sophomore"
                         });
                 });
@@ -901,6 +1137,25 @@ namespace CourseScheduling.Migrations
                     b.ToTable("Waitlists");
                 });
 
+            modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
+                {
+                    b.HasOne("CourseScheduling.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CourseScheduling.Models.Degree", "Degree")
+                        .WithMany("Requirements")
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Degree");
+                });
+
             modelBuilder.Entity("CourseScheduling.Models.Enrollment", b =>
                 {
                     b.HasOne("CourseScheduling.Models.Course", "Course")
@@ -918,6 +1173,17 @@ namespace CourseScheduling.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.Student", b =>
+                {
+                    b.HasOne("CourseScheduling.Models.Degree", "Degree")
+                        .WithMany()
+                        .HasForeignKey("DegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Degree");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.StudentCourse", b =>
@@ -963,6 +1229,11 @@ namespace CourseScheduling.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("Waitlists");
+                });
+
+            modelBuilder.Entity("CourseScheduling.Models.Degree", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("CourseScheduling.Models.Student", b =>

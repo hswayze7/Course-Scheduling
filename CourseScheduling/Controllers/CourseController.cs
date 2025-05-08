@@ -280,6 +280,27 @@ namespace CourseScheduling.Controllers
                 return BadRequest("Course is full.");
             }
 
+
+            var prerequisites = await _context.CoursePrerequisites
+                .Where(p => p.CourseId == model.CourseId)
+                .Select(p => p.PrerequisiteCourseId)
+                .ToListAsync();
+
+            var completedCourseIds = await _context.Enrollments
+                .Where(e => e.StudentId == studentId && e.Grade != null) // only completed
+                .Select(e => e.CourseId)
+                .ToListAsync();
+
+            var missing = prerequisites.Except(completedCourseIds).ToList();
+
+            if (missing.Any())
+            {
+                return BadRequest("You have not completed all the prerequisites for this course.");
+            }
+
+
+
+
             // Create a new enrollment
             var enrollment = new Enrollment
             {
