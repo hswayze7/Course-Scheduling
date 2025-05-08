@@ -9,9 +9,8 @@
 <a href="@Url.Action("Profile", "Account")" class="btn btn-primary">
     <i class="bi bi-arrow-left-circle"></i> Back to Profile
 </a>
-<!-- Main Content Section -->
+
 <div class="container-fluid">
-    <!-- Available Courses Section -->
     <div class="row mb-4">
         <div class="col-12">
             <h2 class="text-primary">Available Courses</h2>
@@ -35,31 +34,24 @@
         </div>
     </div>
 
-    <!-- Schedule & Enrolled Courses Section -->
-    <div class="container-fluid">
-        <!-- Schedule & Enrolled Courses Section -->
-        <div class="row mb-4">
-            <!-- Enrolled Courses Section -->
-            <div class="col-12">
-                <h2 class="text-primary">Your Enrolled Courses</h2>
-                <h4>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h4>
-                <div id="enrolledCourses" class="table-container">
-                    @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
-                </div>
-            </div>
-        </div>
-            <!-- Calendar Section -->
-        <div class="row">
-            <div class="col-12">
-                <h2 class="text-primary">Class Schedule</h2>
-                <div id="calendar" class="calendar-container"></div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-primary">Your Enrolled Courses</h2>
+            <h4>Total Credits Enrolled: <span id="totalCredits">@Model.TotalCredits</span></h4>
+            <div id="enrolledCourses" class="table-container">
+                @await Html.PartialAsync("_EnrolledCourses", Model.EnrolledCourses)
             </div>
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary">Class Schedule</h2>
+            <div id="calendar" class="calendar-container"></div>
+        </div>
+    </div>
 </div>
 
-<!-- Recommended Courses Section -->
 @if (Model.RecommendedCourses != null && Model.RecommendedCourses.Any())
 {
     <div class="row mt-4">
@@ -89,13 +81,13 @@
                             int availableSeats = course.MaxCapacity - course.CurrentEnrollment;
                             string timeConflictIndicator = course.HasConflict ? " (Conflict)" : "";
 
-                            <tr style="cursor: pointer;" onclick="showCourseDetails(@course.CourseId)">
+                            <tr style="cursor: pointer;" onclick="showCourseDetails(@course.CourseId)" id="courseRow-@course.CourseId">
                                 <td>@course.CourseCode</td>
                                 <td>@course.CourseName</td>
                                 <td>@course.Credits</td>
                                 <td>@course.Time<span class="text-danger">@timeConflictIndicator</span></td>
                                 <td>@course.Professor</td>
-                                <td>@availableSeats / @course.MaxCapacity</td>
+                                <td class="seatsColumn">@availableSeats / @course.MaxCapacity</td>
                                 <td>
                                     @if (isEnrolled)
                                     {
@@ -123,7 +115,6 @@
     </div>
 }
 
-<!-- Modal for Course Details -->
 <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -146,17 +137,142 @@
     </div>
 </div>
 
-<!-- Bootstrap and FullCalendar Scripts Inclusion -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+@section Scripts {
+    <script>
+        async function enroll(event, courseId) {
+            event.stopPropagation();
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-<!-- JavaScript and AJAX Logic -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (typeof FullCalendar !== 'undefined') {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            try {
+                const response = await fetch('/Course/Enroll', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ courseId: courseId })
+                });
+
+                if (response.ok) {
+                    const updatedCourse = await response.json();
+                    alert("Enrollment successful!");
+                    updateCourseRow(updatedCourse);
+                    await refreshEnrolledCourses();
+                    updateCalendar();
+                } else {
+                    const errorMsg = await response.text();
+                    alert("Enrollment failed: " + errorMsg);
+                }
+            } catch (error) {
+                console.error("Error during enrollment:", error);
+                alert("An error occurred while enrolling.");
+            }
+        }
+
+        function updateCourseRow(updatedCourse) {
+            const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+            if (row) {
+                const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+                row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+                const enrollButton = row.querySelector('.enrollButton');
+                enrollButton.textContent = 'Enrolled';
+                enrollButton.disabled = true;
+                enrollButton.classList.remove('btn-primary');
+                enrollButton.classList.add('btn-success');
+            }
+        }
+
+        async function deleteEnrollment(event, enrollmentId) {
+            event.stopPropagation();
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            try {
+                const response = await fetch('/Course/DeleteEnrollment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(enrollmentId)
+                });
+
+                if (response.ok) {
+                    const updatedCourse = await response.json();
+                    document.getElementById(`enrolledRow-${enrollmentId}`).remove();
+                    updateCourseRowOnDelete(updatedCourse);
+                    updateCalendar();
+                    await updateTotalCredits();
+                } else {
+                    alert("Failed to delete enrollment.");
+                }
+            } catch (error) {
+                console.error("Error during deletion:", error);
+            }
+        }
+
+        function updateCourseRowOnDelete(updatedCourse) {
+            const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
+            if (row) {
+                const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
+                row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
+                const enrollButton = row.querySelector('.enrollButton');
+                enrollButton.textContent = 'Enroll';
+                enrollButton.disabled = false;
+                enrollButton.classList.remove('btn-secondary', 'btn-success');
+                enrollButton.classList.add('btn-primary');
+            }
+        }
+
+        async function refreshEnrolledCourses() {
+            try {
+                const response = await fetch('/Course/GetEnrolledCoursesTable');
+                if (response.ok) {
+                    const html = await response.text();
+                    document.getElementById("enrolledCourses").innerHTML = html;
+                    await updateTotalCredits();
+                }
+            } catch (error) {
+                console.error("Error refreshing enrolled courses:", error);
+            }
+        }
+
+        async function updateTotalCredits() {
+            try {
+                const response = await fetch('/Course/GetTotalCredits');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("totalCredits").innerText = data.totalCredits;
+                }
+            } catch (error) {
+                console.error("Error updating total credits:", error);
+            }
+        }
+
+        async function showCourseDetails(courseId) {
+            try {
+                const response = await fetch(`/Course/GetCourseDetails?courseId=${courseId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("courseCode").textContent = data.courseCode;
+                    document.getElementById("courseName").textContent = data.courseName;
+                    document.getElementById("courseCredits").textContent = data.credits;
+                    document.getElementById("courseTime").textContent = data.time;
+                    document.getElementById("courseProfessor").textContent = data.professor;
+                    document.getElementById("courseDescription").textContent = data.description;
+                    const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
+                    modal.show();
+                }
+            } catch (error) {
+                console.error("Error fetching course details:", error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const modalElement = document.getElementById('courseDetailsModal');
+            window.courseDetailsModal = new bootstrap.Modal(modalElement);
+
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
                 headerToolbar: {
                     left: 'prev,next today',
@@ -165,12 +281,10 @@
                 },
                 events: async function (fetchInfo, successCallback, failureCallback) {
                     try {
-                        let response = await
+                        let response = await fetch('/Course/GetEnrolledCourses');
                         if (response.ok) {
                             let events = await response.json();
                             successCallback(events);
-                        } else {
-                            console.error("Error fetching events: ", response.status);
                         }
                     } catch (error) {
                         console.error("Error fetching events:", error);
@@ -178,301 +292,46 @@
                 },
                 eventColor: '#378006'
             });
+
             calendar.render();
             window.updateCalendar = function () {
                 calendar.refetchEvents();
             };
-        } else {
-            console.error("FullCalendar is not defined. Ensure the script is loaded correctly.");
-        }
-    });
-</script>
-
-<script>
-    //Function for when the student enrolls into a course. Will also update the calendar object and the enrolled classes table
-    async function enroll(event, courseId) {
-        // Prevent triggering the row click event
-        event.stopPropagation();
-
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-        try {
-            // Enroll in the course
-            const response = await fetch('/Course/Enroll', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ courseId: courseId })
-            });
-
-            if (response.ok) {
-                const updatedCourse = await response.json(); // Get updated course information
-                console.log("Enrollment successful");
-
-                // Update the corresponding row in the available courses table
-                updateCourseRow(updatedCourse);
-
-                // Refresh enrolled courses and update calendar
-                await refreshEnrolledCourses();
-                updateCalendar();
-            } else {
-                console.error("Failed to enroll. Response code: " + response.status);
-            }
-        } catch (error) {
-            console.error("Error during enrollment:", error);
-        }
-    }
-
-    function updateCourseRow(updatedCourse) {
-        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
-        if (row) {
-            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
-
-            // Update the seats column
-            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
-
-            // Update the Enroll button
-            const enrollButton = row.querySelector('.enrollButton');
-            if (availableSeats <= 0) {
-                enrollButton.textContent = 'Full';
-                enrollButton.disabled = true;
-                enrollButton.classList.remove('btn-primary');
-                enrollButton.classList.add('btn-secondary');
-            } else {
-                enrollButton.textContent = 'Enrolled';
-                enrollButton.disabled = true;
-                enrollButton.classList.remove('btn-primary');
-                enrollButton.classList.add('btn-success');
-            }
-        }
-    }
-
-
-    //Function to delete a class after being enrolled.
-
-    async function deleteEnrollment(event, enrollmentId) {
-        event.stopPropagation(); // Prevent default row click behavior
-
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-        try {
-            const response = await fetch('/Course/DeleteEnrollment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify(enrollmentId)  // Send the enrollmentId in the body
-            });
-
-            if (response.ok) {
-                const updatedCourse = await response.json(); // Get the updated course information
-                console.log("Enrollment deleted successfully.");
-
-                // Update the course row in the available courses table
-                updateCourseRowOnDelete(updatedCourse);
-
-                // Remove the deleted course from the enrolled courses table
-                document.getElementById(`enrolledRow-${enrollmentId}`).remove();
-
-                // Update the calendar view
-                updateCalendar();
-
-                // Update the total credits the student is enrolled in
-                await updateTotalCredits();
-            } else {
-                console.error("Failed to delete enrollment. Status:", response.status);
-            }
-        } catch (error) {
-            console.error("Error during deletion:", error);
-        }
-    }
-
-    // Function to update the available courses table row after deleting an enrollment
-    function updateCourseRowOnDelete(updatedCourse) {
-        const row = document.querySelector(`#courseRow-${updatedCourse.courseId}`);
-        if (row) {
-            const availableSeats = updatedCourse.maxCapacity - updatedCourse.currentEnrollment;
-
-            // Update the seats column
-            row.querySelector('.seatsColumn').textContent = `${availableSeats} / ${updatedCourse.maxCapacity}`;
-
-            // Update the Enroll button
-            const enrollButton = row.querySelector('.enrollButton');
-            if (availableSeats > 0) {
-                enrollButton.textContent = 'Enroll';
-                enrollButton.disabled = false;
-                enrollButton.classList.remove('btn-secondary', 'btn-success');
-                enrollButton.classList.add('btn-primary');
-            }
-        }
-    }
-
-
-
-    //Refresh the enroll table and calendar object when deleting / enrolling in classes.
-    async function refreshEnrolledCourses() {
-        try {
-            const enrolledCoursesResponse = await fetch('/Course/GetEnrolledCoursesTable');
-            if (enrolledCoursesResponse.ok) {
-                const html = await enrolledCoursesResponse.text();
-                document.getElementById("enrolledCourses").innerHTML = html;
-                await updateTotalCredits();  // Update total credits after refreshing enrolled courses
-            } else {
-                console.error("Failed to fetch enrolled courses table.");
-            }
-        } catch (error) {
-            console.error("Error fetching enrolled courses:", error);
-        }
-    }
-
-
-
-    //Function to update the total number of credit hours a student is enrolled in after enrolling in another course
-    async function updateTotalCredits() {
-        try {
-            const response = await fetch('/Course/GetTotalCredits');
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById("totalCredits").innerText = data.totalCredits;
-            } else {
-                console.error("Failed to update total credits. Response code: " + response.status);
-            }
-        } catch (error) {
-            console.error("Error updating total credits:", error);
-        }
-    }
-
-    //Creatation of calendar object
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'timeGridWeek,timeGridDay'
-            },
-            events: async function (fetchInfo, successCallback, failureCallback) {
-                try {
-                    let response = await fetch('/Course/GetEnrolledCourses');
-                    if (response.ok) {
-                        let events = await response.json();
-                        successCallback(events);
-                    }
-                } catch (error) {
-                    console.error("Error fetching events:", error);
-                }
-            },
-            eventColor: '#378006'
         });
-
-        calendar.render();
-        window.updateCalendar = function () {
-            calendar.refetchEvents();
-        };
-    });
-
-
-</script>
-
-
-<script>
-    // Function to fetch and display course details in the modal
-    async function showCourseDetails(courseId) {
-        try {
-            const response = await fetch(`/Course/GetCourseDetails?courseId=${courseId}`);
-            if (response.ok) {
-                const data = await response.json();
-
-                // Populate modal content
-                document.getElementById("courseCode").textContent = data.courseCode;
-                document.getElementById("courseName").textContent = data.courseName;
-                document.getElementById("courseCredits").textContent = data.credits;
-                document.getElementById("courseTime").textContent = data.time;
-                document.getElementById("courseProfessor").textContent = data.professor;
-                document.getElementById("courseDescription").textContent = data.description;
-
-                // Show the modal
-                const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
-                modal.show();
-            } else {
-                console.error("Failed to fetch course details. Response code:", response.status);
-            }
-        } catch (error) {
-            console.error("Error fetching course details:", error);
-        }
-    }
-
-    // Ensure Bootstrap modal is initialized globally (optional for debugging)
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalElement = document.getElementById('courseDetailsModal');
-        const modal = new bootstrap.Modal(modalElement);
-
-        // Optionally expose modal to global scope for debugging
-        window.courseDetailsModal = modal;
-    });
-</script>
-
-<style>
-/* Enrolled Courses Section */
-.table-container {
-    width: 100%; /* Ensure the table spans the full width */
-    max-width: 100%; /* Prevent overflow issues */
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-    height: auto; /* Allow height to adjust dynamically */
-    overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+    </script>
 }
 
-    .calendar-container {
-        width: 100%; /* Full width */
-        max-width: 100%; /* Prevent unnecessary shrinking */
-        height: 700px; /* Slightly increased height for better visibility */
+<style>
+    .table-container {
+        width: 100%;
+        max-width: 100%;
         border: 1px solid #ddd;
         border-radius: 10px;
         padding: 15px;
-        background-color: #ffffff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        overflow: hidden; /* Prevent content overflow */
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-/* Container and Row Styling */
-.container-fluid {
-    padding: 10px; /* Minimize container padding for more usable space */
-        max-width: 100%;
-}
-
-.row {
-    margin: 0; /* Remove row margins to eliminate unnecessary spacing */
-    gap: 0; /* Remove gaps between sections */
-}
-
-/* Responsive Adjustments */
-@@media (min-width: 1200px) {
-    .table-container {
-        margin: 0 auto; /* Center the table horizontally */
+    .calendar-container {
+        width: 100%;
+        height: 700px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-}
 
-@@media (max-width: 768px) {
-    .table-container {
-        width: 100%; /* Ensure the table takes full width on smaller screens */
-        overflow-x: scroll; /* Allow scrolling for narrow screens */
+    .fixed-header-table {
+        width: 100%;
+        border-collapse: collapse;
     }
-}
 
-</style >
-
-
-
-
-
-
-
+        .fixed-header-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff; 
+            z-index: 2;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4);
+        }
+</style>

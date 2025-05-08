@@ -172,10 +172,10 @@
             },
             new Enrollment
             {
-                EnrollmentId = 4, // make sure this is unique
+                EnrollmentId = 4, 
                 CourseId = 16,    // MATH242 (Calculus I)
                 StudentId = 1,
-                EnrollmentDate = new DateTime(2024, 8, 20), // adjust as needed
+                EnrollmentDate = new DateTime(2024, 8, 20), 
                 Grade = "B+"     // indicate completion
             }
             );

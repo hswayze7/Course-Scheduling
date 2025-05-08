@@ -239,7 +239,7 @@ namespace CourseScheduling.Controllers
                 SearchCourseCode = courseCode
             };
 
-            return View("Index", viewModel); // Use Index.cshtml to display courses
+            return View("Index", viewModel); 
         }
 
         // Enroll in a course
@@ -293,9 +293,15 @@ namespace CourseScheduling.Controllers
 
             var missing = prerequisites.Except(completedCourseIds).ToList();
 
-            if (missing.Any())
+            var missingPrereqs = prerequisites.Except(completedCourseIds).ToList();
+            if (missingPrereqs.Any())
             {
-                return BadRequest("You have not completed all the prerequisites for this course.");
+                var missingCourses = await _context.Courses
+                    .Where(c => missingPrereqs.Contains(c.CourseId))
+                    .Select(c => c.CourseCode + " - " + c.CourseName)
+                    .ToListAsync();
+
+                return BadRequest("You must complete the prerequisite(s): " + string.Join(", ", missingCourses));
             }
 
 
