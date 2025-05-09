@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250508032929_UpdatePreReq")]
-    partial class UpdatePreReq
+    [Migration("20250509034008_Another")]
+    partial class Another
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -823,7 +823,7 @@ namespace CourseScheduling.Migrations
 
                     b.HasKey("DegreeId");
 
-                    b.ToTable("Degree");
+                    b.ToTable("Degrees");
 
                     b.HasData(
                         new
@@ -1204,6 +1204,14 @@ namespace CourseScheduling.Migrations
                             EnrollmentId = 3,
                             CourseId = 4,
                             EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "B+",
+                            StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 4,
+                            CourseId = 16,
+                            EnrollmentDate = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Grade = "B+",
                             StudentId = 1
                         });

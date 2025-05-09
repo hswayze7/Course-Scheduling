@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CourseScheduling.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class firstcase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,6 +44,31 @@ namespace CourseScheduling.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Degree", x => x.DegreeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CoursePrerequisites",
+                columns: table => new
+                {
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    PrerequisiteCourseId = table.Column<int>(type: "int", nullable: false),
+                    CoursePrerequisiteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoursePrerequisites", x => new { x.CourseId, x.PrerequisiteCourseId });
+                    table.ForeignKey(
+                        name: "FK_CoursePrerequisites_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CoursePrerequisites_Courses_PrerequisiteCourseId",
+                        column: x => x.PrerequisiteCourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,7 +219,7 @@ namespace CourseScheduling.Migrations
                     { 2, "MATH243", "Calculus II", 4, 5, "General education math and natural sciences course. Analytic geometry and the calculus in an interrelated form. Students may receive credit for only one of these courses: MATH 144, 242 or 251. This is a Kansas Systemwide Transfer Course.", 25, "Prof2", "T/TR 1:00 PM - 3:00 PM" },
                     { 3, "CS400", "Data Structures", 4, 2, "Introduces basic data structures and covers their implementations using classes in C++. Includes lists, stacks, queues, binary trees and hash tables.", 35, "Prof3", "T/TR 2:15 PM - 3:30 PM" },
                     { 4, "CS510", "Programming Language Concepts", 3, 15, "Theoretical concepts in the design and use of programming languages. Formal syntax, including Backus Normal Form (BNF), Extended Backus-Naur Form (EBNF), and syntax diagrams. Semantics, including declaration, allocation and evaluation, symbol table and runtime environment; data types and type checking, procedure activation and parameter passing, modules and abstract data types.", 40, "Prof13", "T/TR 8:30 AM - 9:50 AM" },
-                    { 5, "MATH231", "Discrete Structures I", 3, 25, "A study of some of the basic topics of discrete mathematics, including elementary logic, properties of sets, mathematical induction, counting problems using permutations and combinations, trees, elementary probability, and an introduction to graph theory.", 25, "Prof4", "M/W/F 1:00 PM - 3:00 PM" },
+                    { 5, "MATH321", "Discrete Structures I", 3, 25, "A study of some of the basic topics of discrete mathematics, including elementary logic, properties of sets, mathematical induction, counting problems using permutations and combinations, trees, elementary probability, and an introduction to graph theory.", 25, "Prof4", "M/W/F 1:00 PM - 3:00 PM" },
                     { 6, "PSY325", "Developmental Psychology", 3, 25, "Studies systems of formal logic including sentential and predicate logic. Emphasizes the uses of these systems in the analysis of arguments.", 50, "Prof5", "M/T/F 12:30 PM - 1:45 PM" },
                     { 7, "SOC338", "Health & Lifestyle", 3, 10, "General education social and behavioral sciences course. Examines the component dimensions of health and the societal-level factors and lifestyle choices that influence health across the life span.", 30, "Prof6", "M/W/F 2:15 PM - 3:30 PM" },
                     { 8, "MKT690J", "Social Media Marketing", 3, 12, "Social media is an essential part of today’s digital marketing mix and integral to a successful digital strategy. This course provides an introduction to social media marketing and lays the foundation for developing an effective social media campaign. Students learn what social media marketing entails, including the various platforms that exist, selecting the appropriate channels to fit their needs, setting goals and success metrics, and constructing social media strategies that achieve the desired marketing goals. Students also are introduced to quantitative and qualitative measurement tools to evaluate social media initiatives and assess their return on investment for an organization.", 20, "Prof7", "T/TR 9:30 AM - 10:45 AM" },
@@ -245,15 +270,25 @@ namespace CourseScheduling.Migrations
                     { 53, "AC402", "Senior Project II", 3, 27, "Comprehensively covers the student’s concentration in applied computing and its applications. Students continue to work in their teams with faculty and external consultants and industry to refine and develop a final solution for their team based senior project. Prerequisite(s): AC 401.", 75, "Prof54", "F 1:45 PM - 4:15 PM" },
                     { 54, "AC461", "Digital Forensics", 3, 20, "Covers concepts related to hardware and software forensics, incident response, cyber crime and cyber law enforcement. Students learn different aspects of computer and cyber crime and ways to uncover, protect, exploit and document digital evidence. Students are exposed to different types of tools (both software and hardware), techniques and procedures, and are able to use them to perform rudimentary forensic investigations. Focuses on the entire life cycle of incident response including preparation, data collection, data analysis and remediation. Real world case studies reveal the methods behind and remediation strategies for today's most insidious attacks. Prerequisite(s): AC 326 .", 30, "Prof55", "M/W/F 9:30 AM - 11:15 AM" },
                     { 55, "AC462", "Cyber Physical Systems", 4, 15, "Focuses on trustworthy and resilient CPS, starting with NIST's CPS Framework. Students learn about common IoT infrastructures, integrate CPS into organizational risk management, and conduct cybersecurity risk assessments for critical cyber physical systems. Prerequisite(s): ENGR 220 and AC 326, or instructor’s consent.", 35, "Prof56", "M/W/F 11:15 AM - 12:45 PM" },
-                    { 56, "AC463", "Cyber Risk Management", 3, 16, "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.", 35, "Prof56", "M/W/F 10:45 AM - 12:45 PM" },
-                    { 57, "AC464", "Web Application Security", 3, 21, "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .", 35, "Prof56", "M/W/F 11:15 AM - 12:45 PM" },
-                    { 58, "ENGR220", "Applied Analog and Digital Electronics", 3, 14, "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.", 35, "Prof56", "T/TR 11:15 AM - 12:45 PM" }
+                    { 56, "AC463", "Cyber Risk Management", 3, 16, "This course covers application of risk and information security management to improve organizational resilience. Concepts include business impact analysis, incident response planning, disaster recovery planning, business continuity planning and security auditing. Prerequisite(s): AC 326.", 35, "Prof57", "M/W/F 10:45 AM - 12:45 PM" },
+                    { 57, "AC464", "Web Application Security", 3, 21, "Develops an understanding of common web-based vulnerabilities and their impacts. Concepts include development and management of secure web-based systems, security mitigation strategies and penetration testing. Prerequisite(s): AC 324 and AC 326 .", 35, "Prof58", "M/W/F 11:15 AM - 12:45 PM" },
+                    { 58, "ENGR220", "Applied Analog and Digital Electronics", 3, 14, "Provides a fundamental understanding of electronics and programming through content and active learning. Introduces basic electronic components and principles, sensors, actuators and electronic diagnostic tools. Builds confidence and creativity by designing, constructing and debugging circuits as well as programming a micro-controller to perform desired tasks. Introduces students to semiconductors and integrated circuits such as op-amps, combinational logic circuits and flip-flops. Students learn methods to interact with the physical world. At the end of the course, students should be comfortable developing simple electronic prototypes for future projects. Prerequisite(s): MATH 111.", 35, "Prof59", "T/TR 11:15 AM - 12:45 PM" },
+                    { 59, "MATH511", "Linear Algebra", 3, 38, "An elementary study of linear algebra, including an examination of linear transformations and matrices over finite dimensional spaces. Prerequisite(s): MATH 243 with a grade point of 2.000 or better.", 45, "Prof60", "T/TR 12:30 PM - 1:45 PM" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Degree",
                 columns: new[] { "DegreeId", "MajorName" },
                 values: new object[] { 1, "Computer Science" });
+
+            migrationBuilder.InsertData(
+                table: "CoursePrerequisites",
+                columns: new[] { "CourseId", "PrerequisiteCourseId", "CoursePrerequisiteId" },
+                values: new object[,]
+                {
+                    { 2, 16, 1 },
+                    { 17, 20, 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "DegreeRequirements",
@@ -273,7 +308,21 @@ namespace CourseScheduling.Migrations
                     { 11, "CS665", 32, 1, true, "Computer Science", 11 },
                     { 12, "CS356", 33, 1, true, "Computer Science", 12 },
                     { 13, "CS598", 34, 1, true, "Computer Science", 13 },
-                    { 14, "CS599", 35, 1, true, "Computer Science", 14 }
+                    { 14, "CS599", 35, 1, true, "Computer Science", 14 },
+                    { 15, "MATH243", 2, 1, true, "Computer Science", 14 },
+                    { 16, "MATH321", 5, 1, true, "Computer Science", 14 },
+                    { 17, "MATH242", 16, 1, true, "Computer Science", 14 },
+                    { 18, "PHIL125", 14, 1, true, "Computer Science", 14 },
+                    { 19, "PHYS314", 17, 1, true, "Computer Science", 14 },
+                    { 20, "PHYS316", 18, 1, true, "Computer Science", 14 },
+                    { 21, "PHYS313", 20, 1, true, "Computer Science", 14 },
+                    { 22, "PHIL354", 15, 1, true, "Computer Science", 14 },
+                    { 23, "MATH322", 19, 1, true, "Computer Science", 14 },
+                    { 24, "MATH511", 59, 1, true, "Computer Science", 14 },
+                    { 25, "IME254", 21, 1, true, "Computer Science", 14 },
+                    { 26, "ECE194", 22, 1, true, "Computer Science", 14 },
+                    { 27, "ECE238", 24, 1, true, "Computer Science", 14 },
+                    { 28, "ECE394", 26, 1, true, "Computer Science", 14 }
                 });
 
             migrationBuilder.InsertData(
@@ -288,8 +337,14 @@ namespace CourseScheduling.Migrations
                 {
                     { 1, null, 1, new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "A", 1 },
                     { 2, null, 3, new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 3, null, 4, new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "B+", 1 }
+                    { 3, null, 4, new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "B+", 1 },
+                    { 4, null, 16, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "B+", 1 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePrerequisites_PrerequisiteCourseId",
+                table: "CoursePrerequisites",
+                column: "PrerequisiteCourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DegreeRequirements_CourseId",
@@ -340,6 +395,9 @@ namespace CourseScheduling.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CoursePrerequisites");
+
             migrationBuilder.DropTable(
                 name: "DegreeRequirements");
 

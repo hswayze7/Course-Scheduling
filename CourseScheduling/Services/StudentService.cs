@@ -14,7 +14,7 @@ namespace CourseScheduling.Services
             _context = context;
         }
 
-        public async Task<Student> CreateStudent(string firstName, string lastName, string email, string password, string major, string year)
+        public async Task<Student> CreateStudent(string firstName, string lastName, string email, string password, string major, string year, string username, int degreeId)
         {
             //Debugging. 
             Console.WriteLine("DEBUG: Inside CreateStudent method.");
@@ -35,7 +35,9 @@ namespace CourseScheduling.Services
                 Email = email,
                 Password = password,
                 Major = major,
-                Year = year
+                Year = year,
+                Username = username,
+                DegreeId = degreeId
             };
 
             //Debugging. 
@@ -46,7 +48,7 @@ namespace CourseScheduling.Services
             //Debugging. 
             Console.WriteLine($"DEBUG: SaveChangesAsync() affected {changes} rows.");
 
-            //Debugging. //Debugging. //Debugging. 
+            //Debug
             if (changes == 0)
             {
                 Console.WriteLine("ERROR: No data was saved to the database.");

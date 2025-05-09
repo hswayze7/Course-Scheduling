@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CourseScheduling.Services;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CourseScheduling.Controllers
 {
@@ -69,50 +70,64 @@ namespace CourseScheduling.Controllers
         }
 
         [HttpPost("Register")]
+        
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            // Debugging: Check if email already exists in the database
-            var existingStudent = _context.Students.FirstOrDefault(s => s.Email == model.Email);
-            if (existingStudent != null)
+
+            var matchedDegree = _context.Degrees
+    .FirstOrDefault(d => d.MajorName.ToLower() == model.Major.Trim().ToLower());
+
+            if (matchedDegree == null)
             {
-                // Add error to the ModelState if email is already taken
-                ModelState.AddModelError("Email", "This email is already registered. Try a different email.");
-                Console.WriteLine("DEBUG: Email already exists.");
-                return View(model); // Return the view with the error message
+                ModelState.AddModelError("Major", "This major is not recognized. Please enter a valid one.");
+
+                // Re-show the form
+                return View(model);
             }
+
 
             if (!ModelState.IsValid)
             {
-                // Debugging: Output the errors if validation fails
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                foreach (var kvp in ModelState)
                 {
-
-                    Console.WriteLine($"DEBUG: ModelState Error - {error.ErrorMessage}");
+                    foreach (var error in kvp.Value.Errors)
+                    {
+                        Console.WriteLine($"FIELD: {kvp.Key} ? ERROR: {error.ErrorMessage}");
+                    }
                 }
                 return View(model);
             }
 
-            try
+            
+            if (_context.Students.Any(s => s.Email == model.Email))
             {
-                // Proceed with registration
-                var newStudent = await _studentService.CreateStudent(
-                    model.FirstName,
-                    model.LastName,
-                    model.Email,
-                    model.Password,
-                    model.Major,
-                    model.Year
-                );
-
-                TempData["SuccessMessage"] = $"Account for {newStudent.FirstName} {newStudent.LastName} created! Please log in.";
-                return RedirectToAction("Login", "Account"); // Redirect to login page
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError("Email", "This email is already registered.");
                 return View(model);
             }
+
+            
+            if (_context.Students.Any(s => s.Username == model.Username))
+            {
+                ModelState.AddModelError("Username", "This username already exists. Please contact support.");
+                return View(model);
+            }
+
+            
+            var newStudent = await _studentService.CreateStudent(
+                model.FirstName,
+                model.LastName,
+                model.Email,
+                model.Password,
+                model.Major,
+                model.Year,
+                model.Username,
+                matchedDegree.DegreeId
+            );
+
+            TempData["SuccessMessage"] = $"Account for {newStudent.FirstName} {newStudent.LastName} created! Please log in.";
+            return RedirectToAction("Login", "Account");
         }
+
 
 
 

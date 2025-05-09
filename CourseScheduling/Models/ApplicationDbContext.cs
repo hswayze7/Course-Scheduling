@@ -21,6 +21,8 @@
 
         public DbSet<CoursePrerequisite> CoursePrerequisites { get; set; }
 
+        public DbSet<Degree> Degrees { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

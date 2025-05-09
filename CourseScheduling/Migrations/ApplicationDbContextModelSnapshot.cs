@@ -820,7 +820,7 @@ namespace CourseScheduling.Migrations
 
                     b.HasKey("DegreeId");
 
-                    b.ToTable("Degree");
+                    b.ToTable("Degrees");
 
                     b.HasData(
                         new

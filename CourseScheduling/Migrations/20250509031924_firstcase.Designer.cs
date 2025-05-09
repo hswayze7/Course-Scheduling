@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseScheduling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250508030626_MoreDegreeReqs")]
-    partial class MoreDegreeReqs
+    [Migration("20250509031924_firstcase")]
+    partial class firstcase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -777,6 +777,38 @@ namespace CourseScheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CourseScheduling.Models.CoursePrerequisite", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrerequisiteCourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoursePrerequisiteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "PrerequisiteCourseId");
+
+                    b.HasIndex("PrerequisiteCourseId");
+
+                    b.ToTable("CoursePrerequisites");
+
+                    b.HasData(
+                        new
+                        {
+                            CourseId = 2,
+                            PrerequisiteCourseId = 16,
+                            CoursePrerequisiteId = 1
+                        },
+                        new
+                        {
+                            CourseId = 17,
+                            PrerequisiteCourseId = 20,
+                            CoursePrerequisiteId = 2
+                        });
+                });
+
             modelBuilder.Entity("CourseScheduling.Models.Degree", b =>
                 {
                     b.Property<int>("DegreeId")
@@ -1174,6 +1206,14 @@ namespace CourseScheduling.Migrations
                             EnrollmentDate = new DateTime(2025, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Grade = "B+",
                             StudentId = 1
+                        },
+                        new
+                        {
+                            EnrollmentId = 4,
+                            CourseId = 16,
+                            EnrollmentDate = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Grade = "B+",
+                            StudentId = 1
                         });
                 });
 
@@ -1289,6 +1329,25 @@ namespace CourseScheduling.Migrations
                     b.ToTable("Waitlists");
                 });
 
+            modelBuilder.Entity("CourseScheduling.Models.CoursePrerequisite", b =>
+                {
+                    b.HasOne("CourseScheduling.Models.Course", "Course")
+                        .WithMany("Prerequisites")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CourseScheduling.Models.Course", "PrerequisiteCourse")
+                        .WithMany()
+                        .HasForeignKey("PrerequisiteCourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("PrerequisiteCourse");
+                });
+
             modelBuilder.Entity("CourseScheduling.Models.DegreeRequirement", b =>
                 {
                     b.HasOne("CourseScheduling.Models.Course", "Course")
@@ -1379,6 +1438,8 @@ namespace CourseScheduling.Migrations
             modelBuilder.Entity("CourseScheduling.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
+
+                    b.Navigation("Prerequisites");
 
                     b.Navigation("Waitlists");
                 });

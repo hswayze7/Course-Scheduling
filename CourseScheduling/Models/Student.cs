@@ -8,8 +8,8 @@ namespace CourseScheduling.Models
         [Key]
         public int StudentId { get; set; }
 
-        [Required]
-        public string Username { get; set; }
+
+       public string Username { get; set; }
 
 
         [Required]
